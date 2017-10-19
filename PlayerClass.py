@@ -19,6 +19,23 @@ class Player(BaseMapObject):
         self.Attributes['Memory'] = 20
         self.Attributes['Perception'] = 20
         self.Attributes['Endurance'] = 20
+        self.Aircraft = {
+            "_id": 0,
+            "diameter": 3,
+            "ship_type": "Interceptor",
+            "max_structure": 200,
+            "max_armor": 200,
+            "max_shields": 200,
+            "max_speed": 250,
+            "acceleration": 15,
+            "structure": 200,
+            "armor": 200,
+            "shields": 200,
+            "speed": 250,
+            "min_damage": 10,
+            "max_damage": 15,
+            "accuracy": 100,
+        }
         pass
 
     def toJSON(self):
@@ -28,5 +45,6 @@ class Player(BaseMapObject):
         res += ', "Sector": "%s"' % self.CurrentSector.get_id()
         res += ', "Attributes": %s' % json.dumps(self.Attributes)
         res += ', "Organization": %s' % self.Organization.toJSON()
+        res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
         res += '}'
         return res

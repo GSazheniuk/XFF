@@ -1,38 +1,26 @@
 from Logger import Logger
 from Chat import Chat
-from map import Map, MapSector
+from map import Map
 
 
-class DataHolder:
+OnlinePlayers = {}
+Players = {}
+Sessions = {}
+Chat = Chat()
+Map = Map(1, 1)
+Log = Logger('XFF', 'SharedData')
+frontServicesFree = 0
 
-    OnlinePlayers = {}
-    Players = {}
-    Sessions = {}
-    Chat = Chat()
-    Map = Map(1, 1)
-    Log = Logger('XFF', 'SharedData')
-    frontServicesFree = 0
 
-    def __init__(self):
-        pass
+def get_current_player(req):
+    token_id = 0
+    res = []
+    session_id = req.get_cookie('sessionId')
 
-    def __init__(self, req):
-        self.currentPlayer = self.get_current_player(req)
-        pass
-    
-    def get_current_player(sessionId):
-        tokenId = 0
-        res = []
+    if session_id in OnlinePlayers:
+        token_id = OnlinePlayers[session_id]
 
-        for p in DataHolder.OnlinePlayers:
-            if p == sessionId:
-                tokenId = DataHolder.OnlinePlayers[p]
-                pass
-            pass
+    if token_id in Players:
+        return Players[token_id]
 
-        for p in DataHolder.Players:
-            if p == tokenId:
-                return DataHolder.Players[p]
-            pass
-
-        return res
+    return res

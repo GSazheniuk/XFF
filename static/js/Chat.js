@@ -11,7 +11,7 @@ Chat.prototype = {
 		this.refreshTimeout = 1000;
 	},
 	
-	refreshChannel: function(e) {
+	refreshChannel: function(e, refresh_all) {
 		var obj = e;
 		
 		if (obj.data)
@@ -21,7 +21,7 @@ Chat.prototype = {
 			type: "POST",
             contentType: "application/json; charset=utf-8",
 			url: "http://localhost:8081/chat/getPlayers",
-			data: JSON.stringify({"channel": "local"}),
+			data: JSON.stringify({"channel": "local", "refresh_all": refresh_all}),
 			dataType: "json",
 			success: function (r) {
 				console.log(r);
@@ -34,7 +34,7 @@ Chat.prototype = {
 					$(s).toggle();
 					$(".member_list ul").append(s);
 				}
-				obj.refreshChannel(obj);
+				obj.refreshChannel(obj, 0);
 				//console.log(pl);
 			},
 			error: function (message) {
@@ -160,7 +160,7 @@ Chat.prototype = {
 			}
 		});
 //		mainGame.setTimer('chat', obj.refreshChannel, 1000, obj);
-		obj.refreshChannel(obj)
+		obj.refreshChannel(obj, 1)
 		obj.getChatMessages(obj);
 	}
 }

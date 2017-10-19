@@ -33,46 +33,5 @@ class Waiters:
         future.set_result({})
         pass
 
-    def subscribe_for_chat_messages(self):
-        result_future = Future()
-        self._ChatMessageWaiters.add(result_future)
-        return result_future
-
-    def subscribe_for_map_sector_objects(self):
-        result_future = Future()
-        self._MapSectorObjectWaiters.add(result_future)
-        return result_future
-
-    def subscribe_for_event_log(self):
-        result_future = Future()
-        self._EventLogWaiters.add(result_future)
-        return result_future
-
-    def send_to_chat_message_waiters(self, o):
-        for future in self._ChatMessageWaiters:
-            future.set_result(o)
-            pass
-        self._ChatMessageWaiters = set()
-        pass
-
-    def send_to_map_sector_object_waiters(self, o):
-        for future in self._MapSectorObjectWaiters:
-            future.set_result(o)
-            pass
-        self._MapSectorObjectWaiters = set()
-        pass
-
-    def send_to_event_log_waiters(self, o):
-        for future in self._EventLogWaiters:
-            future.set_result(o)
-            pass
-        self._EventLogWaiters = set()
-        pass
-
-    def cancel_chat_message_waiters(self, future):
-        self._ChatMessageWaiters.remove(future)
-        future.set_result({})
-        pass
-
 
 all_waiters = Waiters()

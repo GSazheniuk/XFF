@@ -38,6 +38,7 @@ Player.prototype = {
 				}
 				
 				owner.isLoaded = 1;
+				mainGame.getMapObjects(mainGame, 1)
 //                console.log(owner);
 
                 // if (response != null && response.RefreshPlayerResult != null) {

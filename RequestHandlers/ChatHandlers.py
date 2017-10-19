@@ -2,27 +2,28 @@ import tornado.escape
 import tornado.web
 
 import Waiters
+import SharedData
 
 from tornado import gen
-from SharedData import DataHolder
 
 
 class ChatGetPlayers(tornado.web.RequestHandler):
     @gen.coroutine
     def post(self):
-        self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS)
-        msgs = yield self.future
-
-        if self.request.connection.stream.closed():
-            return
-
-        print(msgs)
         print(self.request.body)
         channel = tornado.escape.json_decode(self.request.body)["channel"]
-        players = DataHolder.Chat.Channels2Players[channel]
+        refresh_all = tornado.escape.json_decode(self.request.body)["refresh_all"]
+        if refresh_all != 1:
+            self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS)
+            yield self.future
+            if self.request.connection.stream.closed():
+                return
+            pass
+
+        players = SharedData.Chat.Channels2Players[channel]
         res = '{ "players" : ['
         for TokenId in players:
-            player = DataHolder.Players[TokenId]
+            player = SharedData.Players[TokenId]
             res += ',{"name": "%s"}' % player.Name
             pass
         res += "]}"
@@ -40,8 +41,8 @@ class ChatSendMessage(tornado.web.RequestHandler):
         post_data = tornado.escape.json_decode(self.request.body)
         channel = post_data["channel"]
         message = post_data["message"]
-        player = DataHolder.get_current_player(self.get_cookie("tokenId"))
-        r = DataHolder.Chat.send_message(player, channel, message)
+        player = SharedData.get_current_player(self)
+        r = SharedData.Chat.send_message(player, channel, message)
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_CHAT_MESSAGES, r)
         self.write("{}")
         pass
@@ -81,6 +82,6 @@ class ChatGetMessages(tornado.web.RequestHandler):
 
 class ChatGotMessages(tornado.web.RequestHandler):
     def post(self):
-        player = DataHolder.get_current_player(self.get_cookie("tokenId"))
+        # player = SharedData.get_current_player(self)
         self.write("{}")
         pass

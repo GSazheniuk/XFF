@@ -5,9 +5,8 @@ import config
 import mongohelper
 import events
 import UFOs
+import SharedData
 
-from map import Map
-from SharedData import DataHolder
 from RTimer import RepeatedTimer
 
 
@@ -33,7 +32,7 @@ class BackBoneServer:
 
     def start(self):
         self.rt = RepeatedTimer(config.BACKSERVER_TICK_INTERVAL, self._tick)
-        DataHolder.Log.save_msg('BackService started... OK')
+        SharedData.Log.save_msg('BackService started... OK')
         pass
 
     def stop(self):
@@ -51,7 +50,7 @@ class BackBoneServer:
             pass
 
         for u in available_ufos:
-            self.active_ufos.append(events.FlyingUFO(u, DataHolder.Map.DefaultSector))
+            self.active_ufos.append(events.FlyingUFO(u, SharedData.Map.DefaultSector))
             pass
         pass
 

@@ -2,23 +2,24 @@ import tornado.web
 import random
 
 import Waiters
+import config
+import SharedData
 
-from SharedData import DataHolder
 from NPCOrganizationsHelper import NPCOrganizations
 from PlayerClass import Player
 
 
 class PlayerGetData(tornado.web.RequestHandler):
     def initialize(self):
-        self.tokenId = self.get_cookie("tokenId")
-        print(self.tokenId)
+        self.sessionId = self.get_cookie("sessionId")
+        print(self.sessionId)
         pass
 
     def get(self):
-        print('PlayerGetData: ', self.tokenId)
-        print('OnlinePlayers: ', DataHolder.OnlinePlayers)
-        if self.tokenId in DataHolder.OnlinePlayers:
-            cp = DataHolder.Players[DataHolder.OnlinePlayers[self.tokenId]]
+        print('PlayerGetData: ', self.sessionId)
+        print('OnlinePlayers: ', SharedData.OnlinePlayers)
+        if self.sessionId in SharedData.OnlinePlayers:
+            cp = SharedData.Players[SharedData.OnlinePlayers[self.sessionId]]
             self.write(cp.toJSON().encode())
             pass
         else:
@@ -28,14 +29,17 @@ class PlayerGetData(tornado.web.RequestHandler):
 
 class PlayerLoginPlayer(tornado.web.RequestHandler):
     def initialize(self):
-        self.tokenId = self.get_cookie("tokenId")
+        self.sessionId = self.get_cookie("sessionId")
+        if self.sessionId is None:
+            self.sessionId = str(random.randint(config.PLAYER_MIN_ID, config.PLAYER_MAX_ID))
+            self.set_cookie("sessionId", self.sessionId)
         pass
 
     def get(self):
-        if self.tokenId:
+        if (self.sessionId is not None) and (self.sessionId in SharedData.OnlinePlayers):
             self.redirect("/")
         else:
-            self.render("html\login.html", messages=[])
+            self.render("html\login.html")
         pass
 
     def post(self):
@@ -45,13 +49,13 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
             , "Merle"
             , npc_org.get_random_org()
             , random.randint(1000000, 10000000)
-            , DataHolder.Map.DefaultSector
+            , SharedData.Map.DefaultSector
         )
 
-        DataHolder.OnlinePlayers[self.tokenId] = player.Token
-        DataHolder.Players[player.Token] = player
+        SharedData.OnlinePlayers[self.sessionId] = player.Token
+        SharedData.Players[player.Token] = player
 
-        DataHolder.Chat.subscribe_player_to_channel(player, "local")
+        SharedData.Chat.subscribe_player_to_channel(player, "local")
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS, player)
 
         self.redirect("/")

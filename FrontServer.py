@@ -37,7 +37,7 @@ class FrontWatchServer:
                 template_path=os.path.join(os.path.dirname(__file__), "static"),
                 static_path=os.path.join(os.path.dirname(__file__), "static"),
                 xsrf_cookies=False,
-                debug=False,
+                debug=True,
             )
         pass
 

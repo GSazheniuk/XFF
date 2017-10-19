@@ -1,7 +1,7 @@
 import random
 import config
 
-from tornado.concurrent import Future
+import Waiters
 
 
 class MapSector:
@@ -14,34 +14,24 @@ class MapSector:
         self.Width = config.MAP_DEFAULT_SECTOR_WIDTH
         self.Height = config.MAP_DEFAULT_SECTOR_HEIGHT
         self.objects = {}
-        self.Waiters = set()
         pass
 
     def add_object(self, o):
         self.objects[o.id] = o.get_dict()
-        if len(self.Waiters) > 0:
-            for future in self.Waiters:
-                future.set_result(self.objects)
-        self.Waiters = set()
+        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, o)
         pass
 
     def remove_object(self, o):
         self.objects[o.id] = None
-        if len(self.Waiters) > 0:
-            for future in self.Waiters:
-                future.set_result(self.objects)
-        self.Waiters = set()
+        del self.objects[o.id]
+        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
         pass
 
     def get_objects_on_map(self):
-        result_future = Future()
-        self.Waiters.add(result_future)
-        return result_future
+        return self.objects
 
-    def cancel_wait(self, future):
-        self.Waiters.remove(future)
-        future.set_result({})
-        pass
+    def get_id(self):
+        return self._id
 
 
 class Map:

@@ -1,56 +1,34 @@
 ﻿var mGame = function () { };
 
 mGame.prototype = {
-    intervalIds: {},
-    refreshTimeout: 5000,
-
     constructor: function () {
-        refreshTimeout = 5000;
     },
+	
+	getMapObjects: function (e, refresh_all) {
+		var obj = e;
 
-    //Callbacks
-    refreshWorldTimeCallback: null,
-
-    setTimer: function (intervalId, delegate, interval, owner) {
-        if (this.intervalIds[intervalId] != null) {
-            window.clearInterval(this.intervalIds[intervalId]);
-            this.intervalIds[intervalId] = null;
-        }
-
-        this.intervalIds[intervalId] = window.setInterval(delegate, interval, owner);
-    },
-
-    refreshWorldTime: function (w) {
-        $.ajax({
-            type: "POST",
+		$.ajax({
+			type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8001/HOOService/GetWorldState",
-            data: JSON.stringify({ }),
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-
-                if (response != null && response.GetWorldStateResult != null) {
-                    var res = JSON.parse(response.GetWorldStateResult);
-                    //console.log(response.GetWorldStateResult);
-                    //console.log(res);
-
-                    //console.log(w);
-
-                    w.WorldPeriod = res.Period;
-                    w.WorldTick = res.Tick;
-                    w.WorldTurn = res.Turn;
-
-                    if (typeof w.refreshWorldTimeCallback === "function")
-                        w.refreshWorldTimeCallback();
-                }
-            },
-            error: function (message) {
-                console.error("error has occured");
-                console.error(message);
-            }
-        })
-    },
+			url: "http://localhost:8081/map/getObjects",
+			data: JSON.stringify({"refresh_all": refresh_all}),
+			dataType: "json",
+			success: function (r) {
+				console.log(r);
+				$("#map_holder").empty();
+				for(var obj_id in r) {
+					var s = '<li>'+JSON.stringify(r[obj_id])+'</li>';
+					$("#map_holder").append(s);
+				}
+				obj.getMapObjects(obj, 1 - refresh_all);
+				//console.log(pl);
+			},
+			error: function (message) {
+				console.error("error has occured");
+				console.error(message);
+			}
+		});
+	},
 
     LoadMain: function () {
 		p.refreshPlayer(this);

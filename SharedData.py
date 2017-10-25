@@ -1,3 +1,7 @@
+import config
+import random
+import MapActions
+
 from Logger import Logger
 from Chat import Chat
 from map import Map
@@ -5,11 +9,13 @@ from map import Map
 
 OnlinePlayers = {}
 Players = {}
+AllFlyingObjects = {}
 Sessions = {}
 Chat = Chat()
 Map = Map(1, 1)
 Log = Logger('XFF', 'SharedData')
 frontServicesFree = 0
+AllMapActions = {}
 
 
 def get_current_player(req):
@@ -24,3 +30,15 @@ def get_current_player(req):
         return Players[token_id]
 
     return res
+
+
+def add_map_action(player, object_id, action_type):
+    if action_type == config.MapActionTypes.ACTION_TYPE_APPROACH:
+        AllMapActions[str(random.randint(0, 1000000))] = {
+            "action": MapActions.approach_to_object,
+            "kwargs": {
+                "player": player,
+                "object": AllFlyingObjects[object_id],
+            }
+        }
+    pass

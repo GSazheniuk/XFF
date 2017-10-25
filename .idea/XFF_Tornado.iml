@@ -4,9 +4,12 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/MongoCollections" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/RequestHandlers" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ActionHandlers" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Tools" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Forum.ge" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />

@@ -1,5 +1,5 @@
 html { height:100%; }
-body { position:absolute; top:0; bottom:0; right:0; left:0; }
+body { position:absolute; top:0; bottom:0; right:0; left:0; font-family: 'Orbitron', sans-serif;}
 .pull-bottom{ position: absolute; bottom: 0; right: 0; }
 .chat_container{
 	position: absolute; 
@@ -9,6 +9,15 @@ body { position:absolute; top:0; bottom:0; right:0; left:0; }
 	height: 50%;
 	display:none;
 }
+
+.orbitron{
+	font-family: 'Orbitron'
+}
+
+.poiret{
+	font-family: 'Poiret One'
+}
+
 .chat_sidebar{
 	background-color:#303030;
 	border: solid thin silver

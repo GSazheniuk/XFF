@@ -1,13 +1,11 @@
 import random
-import time
-import config
 
-import mongohelper
-import events
-import UFOs
 import SharedData
-
+import UFOs
+import config
+import events
 from RTimer import RepeatedTimer
+from Tools import mongohelper
 
 
 class BackBoneServer:
@@ -50,7 +48,21 @@ class BackBoneServer:
             pass
 
         for u in available_ufos:
-            self.active_ufos.append(events.FlyingUFO(u, SharedData.Map.DefaultSector))
+            ufo = events.FlyingUFO(u, SharedData.Map.DefaultSector)
+            self.active_ufos.append(ufo)
+            SharedData.AllFlyingObjects[str(ufo.id)] = ufo
+            print("Ufo added to FlyingObjects - ", ufo.__dict__)
+            pass
+
+#        all_actions = SharedData.AllMapActions.values()
+        for action_id in list(SharedData.AllMapActions):
+            ma = SharedData.AllMapActions[action_id]
+            print('MapAction - ', action_id)
+            print('kwargs - ', ma["kwargs"])
+            if ma["action"](**ma["kwargs"]) == 1:
+                SharedData.AllMapActions[action_id] = None
+                del SharedData.AllMapActions[action_id]
+                pass
             pass
         pass
 

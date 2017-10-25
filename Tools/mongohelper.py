@@ -36,7 +36,11 @@ class MongoHelper:
                 "duration": 25,
                 "max_instances_in_sector": 10,
                 "max_shields": 100,
-                "max_speed": 100
+                "max_speed": 100,
+                "actions": [
+                    {"name": "move", "probability": 6, "max_duration": 10, "status": 1},
+                    {"name": "leave", "probability": 4, "max_duration": 15, "status": 0},
+                ]
             })
             pass
         return ufos

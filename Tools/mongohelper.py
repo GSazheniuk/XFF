@@ -38,6 +38,7 @@ class MongoHelper:
                 "max_shields": 100,
                 "max_speed": 100,
                 "actions": [
+                    {"name": "appear", "probability": 0, "max_duration": 5, "status": 0},
                     {"name": "move", "probability": 6, "max_duration": 10, "status": 1},
                     {"name": "leave", "probability": 4, "max_duration": 15, "status": 0},
                 ]

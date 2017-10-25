@@ -6,13 +6,20 @@ import config
 from BaseMapObject import BaseMapObject
 
 
-class Player(BaseMapObject):
+class Player:
     def __init__(self, name, last_name, organization, token, sector):
-        BaseMapObject.__init__(self, random.randint(0, 99999), random.randint(0, 99999), 1, config.MapObjectTypes.PLAYER)
+        self.MapObject = BaseMapObject(
+            random.randint(0, 99999),
+            random.randint(0, 99999),
+            1,
+            config.MapObjectTypes.PLAYER,
+            token,
+        )
         self.Name = '%s %s' % (name, last_name)
         self.Organization = organization
         self.Token = token
         self.CurrentSector = sector
+        self.Status = config.PlayerStatuses.PLAYER_STATUS_STOPPED
         self.Attributes = dict()
         self.Attributes['Willpower'] = 20
         self.Attributes['Intellect'] = 20
@@ -31,7 +38,7 @@ class Player(BaseMapObject):
             "structure": 200,
             "armor": 200,
             "shields": 200,
-            "speed": 250,
+            "speed": 750,
             "min_damage": 10,
             "max_damage": 15,
             "accuracy": 100,
@@ -46,5 +53,6 @@ class Player(BaseMapObject):
         res += ', "Attributes": %s' % json.dumps(self.Attributes)
         res += ', "Organization": %s' % self.Organization.toJSON()
         res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
+        res += ', "MapObject": %s' % json.dumps(self.MapObject.get_dict())
         res += '}'
         return res

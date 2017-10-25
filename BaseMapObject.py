@@ -1,14 +1,10 @@
-import config
-import random
-
-
 class BaseMapObject:
-    def __init__(self, x, y, r, obj_type):
+    def __init__(self, x, y, r, obj_type, object_id):
         self.X = x
         self.Y = y
         self.R = r
         self.objType = obj_type
-        self.id = random.randint(0, config.EVENTS_MAX_ID)
+        self.id = object_id
         pass
 
     def __del__(self):

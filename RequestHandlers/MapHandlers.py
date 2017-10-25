@@ -3,6 +3,7 @@ import tornado.web
 
 import SharedData
 import Waiters
+import config
 
 from tornado import gen
 
@@ -33,4 +34,13 @@ class MapGetObjects(tornado.web.RequestHandler):
 
     def on_connection_close(self):
         Waiters.all_waiters.cancel_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, self.future)
+        pass
+
+
+class ApproachObject(tornado.web.RequestHandler):
+    def post(self, *args, **kwargs):
+        player = SharedData.get_current_player(self)
+        object_id = tornado.escape.json_decode(self.request.body)["object_id"]
+        SharedData.add_map_action(player, object_id, config.MapActionTypes.ACTION_TYPE_APPROACH)
+        self.write("{}")
         pass

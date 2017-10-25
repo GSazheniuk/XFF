@@ -6,7 +6,7 @@ class Probe:
         self._id = 0
         self.ufo_type = 'Probe'
         self.probability = 45000
-        self.duration = 25                      # Ticks
+        self.duration = 50                      # Ticks
         self.max_instances_in_sector = 10
         self.diameter = 3
         self.max_speed = 100                    # MPS
@@ -34,7 +34,7 @@ class SmallScout:
         self._id = 1
         self.ufo_type = 'Small Scout'
         self.probability = 40000
-        self.duration = 25                      # Ticks
+        self.duration = 75                      # Ticks
         self.max_instances_in_sector = 10
         self.diameter = 5
         self.max_speed = 150                    # MPS
@@ -66,7 +66,7 @@ class MediumScout:
         self._id = 2
         self.ufo_type = 'Medium Scout'
         self.probability = 35000
-        self.duration = 25                      # Ticks
+        self.duration = 125                     # Ticks
         self.max_instances_in_sector = 8
         self.diameter = 7
         self.max_speed = 250                    # MPS
@@ -97,8 +97,8 @@ class LargeScout:
     def __init__(self):
         self._id = 3
         self.ufo_type = 'Large Scout'
-        self.probability = 30000
-        self.duration = 23                      # Ticks
+        self.probability = 25000
+        self.duration = 100                     # Ticks
         self.max_instances_in_sector = 6
         self.diameter = 10
         self.max_speed = 300                    # MPS

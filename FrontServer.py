@@ -23,6 +23,7 @@ class FrontWatchServer:
                     (r"/player/getData", PlayerHandlers.PlayerGetData),
                     # Map requests
                     (r"/map/getObjects", MapHandlers.MapGetObjects),
+                    (r"/map/approachObject", MapHandlers.ApproachObject),
                     # Chat requests
                     (r"/chat/getPlayers", ChatHandlers.ChatGetPlayers),
                     (r"/chat/getMessages", ChatHandlers.ChatGetMessages),

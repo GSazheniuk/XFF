@@ -47,15 +47,16 @@ class FlyingUFO:
     def __init__(self, o, ms):
         self.duration = o['duration']
         self.id = random.randint(0, config.EVENTS_MAX_ID)
-        self.objects = [BaseMapObject.BaseMapObject(
+        self.data = o
+        self.map_object = BaseMapObject.BaseMapObject(
             random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
             random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
             o['diameter'],
-            o['ufo_type']
-        )]
+            o['ufo_type'],
+            self.id
+        )
         self.sector = ms
-        for obj in self.objects:
-            ms.add_object(obj)
+        ms.add_object(self.map_object)
         print('%s appeared in %s (%s) for %s ticks' % (o['ufo_type'], ms.Name, self.id, self.duration))
         print(self.id)
         print(o['_id'])
@@ -68,8 +69,7 @@ class FlyingUFO:
 
     def end(self):
         print('end called for %s' % self.id)
-        for o in self.objects:
-            self.sector.remove_object(o)
+        self.sector.remove_object(self.map_object)
         pass
 
     def __del__(self):

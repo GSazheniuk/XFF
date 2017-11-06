@@ -32,13 +32,42 @@ def get_current_player(req):
     return res
 
 
-def add_map_action(player, object_id, action_type):
+def add_map_action(player, ufo, action_type):
     if action_type == config.MapActionTypes.ACTION_TYPE_APPROACH:
         AllMapActions[str(random.randint(0, 1000000))] = {
             "action": MapActions.approach_to_object,
             "kwargs": {
                 "player": player,
-                "object": AllFlyingObjects[object_id],
+                "object": ufo,
             }
         }
+    elif action_type == config.MapActionTypes.ACTION_TYPE_APPEAR:
+        ufo.duration = ufo.data["actions"][action_type]["max_duration"]
+        AllMapActions[str(random.randint(0, 1000000))] = {
+            "action": MapActions.appear,
+            "kwargs": {
+                "object": ufo,
+            }
+        }
+    elif action_type == config.MapActionTypes.ACTION_TYPE_MOVE_TO_POINT:
+        ufo.duration = ufo.data["actions"][action_type]["max_duration"]
+        AllMapActions[str(random.randint(0, 1000000))] = {
+            "action": MapActions.move_to_point,
+            "kwargs": {
+                "object": ufo,
+                "point": {
+                    "X": random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
+                    "Y": random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
+                }
+            }
+        }
+    elif action_type == config.MapActionTypes.ACTION_TYPE_LEAVE:
+        ufo.duration = ufo.data["actions"][action_type]["max_duration"]
+        AllMapActions[str(random.randint(0, 1000000))] = {
+            "action": MapActions.disappear,
+            "kwargs": {
+                "object": ufo,
+            }
+        }
+
     pass

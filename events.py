@@ -63,7 +63,7 @@ class FlyingUFO:
         pass
 
     def tick(self):
-        self.duration -= 1
+        # self.duration -= 1
         print("event id: %s duration %s" % (self.id, self.duration))
         pass
 

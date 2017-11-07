@@ -22,8 +22,8 @@ class Probe:
         self.acceleration = 15
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
-            "move": {"probability": 6, "max_duration": 10, "status": 1},
-            "leave": {"probability": 4, "max_duration": 15, "status": 0},
+            "move": {"probability": 5, "max_duration": 10, "status": 1},
+            "leave": {"probability": 5, "max_duration": 15, "status": 0},
         }
         pass
 
@@ -39,7 +39,7 @@ class SmallScout:
     def __init__(self):
         self._id = 1
         self.ufo_type = 'Small Scout'
-        self.probability = 40000
+        self.probability = 60000
         self.duration = 75                      # Ticks
         self.max_instances_in_sector = 10
         self.diameter = 5
@@ -77,7 +77,7 @@ class MediumScout:
     def __init__(self):
         self._id = 2
         self.ufo_type = 'Medium Scout'
-        self.probability = 35000
+        self.probability = 45000
         self.duration = 125                     # Ticks
         self.max_instances_in_sector = 8
         self.diameter = 7
@@ -98,7 +98,7 @@ class MediumScout:
         self.acceleration = 25
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
-            "move": {"probability": 6, "max_duration": 10, "status": 1},
+            "move": {"probability": 7, "max_duration": 10, "status": 1},
             "leave": {"probability": 4, "max_duration": 15, "status": 0},
         }
         pass
@@ -136,8 +136,8 @@ class LargeScout:
         self.acceleration = 25
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
-            "move": {"probability": 6, "max_duration": 10, "status": 1},
-            "leave": {"probability": 4, "max_duration": 15, "status": 0},
+            "move": {"probability": 8, "max_duration": 12, "status": 1},
+            "leave": {"probability": 3, "max_duration": 15, "status": 0},
         }
         pass
 

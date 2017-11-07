@@ -4,6 +4,8 @@ import SharedData
 import UFOs
 import config
 import events
+import Waiters
+
 from RTimer import RepeatedTimer
 from Tools import mongohelper
 
@@ -82,6 +84,8 @@ class BackBoneServer:
                 del SharedData.AllMapActions[action_id]
                 pass
             pass
+
+        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
         pass
 
     def get_available_ufos(self, probability):

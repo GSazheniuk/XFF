@@ -64,9 +64,11 @@ def move_to_point(**kwargs):
     obj.duration -= 1
 
     if dist <= o["speed"] or obj.duration == 0:
-        obj.Status = config.PlayerStatuses.PLAYER_STATUS_MOVING
+        # obj.Status = config.UfoStatuses.UFO_STATUS_MOVING
+        # obj.map_object.status = config.UfoStatuses.UFO_STATUS_MOVING
         return 1
 
+    obj.map_object.status = config.UfoStatuses.UFO_STATUS_MOVING
     print(obj.id, ' moving for next ', obj.duration, ' ticks')
     return 0
 
@@ -87,6 +89,7 @@ def appear(**kwargs):
         obj.Status = config.PlayerStatuses.PLAYER_STATUS_MOVING
         return 1
 
+    obj.map_object.status = config.UfoStatuses.UFO_STATUS_APPEARING
     print(obj.id, ' appears in ', obj.duration, ' ticks')
     return 0
 
@@ -107,5 +110,6 @@ def disappear(**kwargs):
         obj.Status = config.PlayerStatuses.PLAYER_STATUS_MOVING
         return -1
 
+    obj.map_object.status = config.UfoStatuses.UFO_STATUS_LEAVING
     print(obj.id, ' leaves in ', obj.duration, ' ticks')
     return 0

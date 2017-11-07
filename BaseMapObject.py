@@ -5,6 +5,7 @@ class BaseMapObject:
         self.R = r
         self.objType = obj_type
         self.id = object_id
+        self.status = 0
         pass
 
     def __del__(self):

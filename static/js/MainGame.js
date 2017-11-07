@@ -23,7 +23,8 @@ mGame.prototype = {
 					s += r[obj_id].Y + ' - ';
 					s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
 					s += ' miles away. ';
-					s += '<span class="approach">&gt;&gt;</span>'
+					s += '- ' + enums.UfoStatuses[r[obj_id].status];
+					s += ' <span class="approach">&gt;&gt;</span>'
 					s += '</li>';
 					$("#map_holder").append(s);
 				}
@@ -43,7 +44,7 @@ mGame.prototype = {
                         }
                     })
                 });
-				obj.getMapObjects(obj, 1 - refresh_all);
+				obj.getMapObjects(obj, 0);
 				//console.log(pl);
 			},
 			error: function (message) {

@@ -9,7 +9,7 @@ class Probe:
         self.duration = 50                      # Ticks
         self.max_instances_in_sector = 10
         self.diameter = 3
-        self.max_speed = 100                    # MPS
+        self.max_speed = 1250                   # MPS
         self.max_shields = 100
         self.max_armor = 100
         self.max_structure = 100
@@ -19,7 +19,7 @@ class Probe:
         self.min_loot = 1
         self.max_loot = 3
         self.bounty = 100
-        self.acceleration = 15
+        self.acceleration = 300
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
             "move": {"probability": 5, "max_duration": 10, "status": 1},
@@ -43,7 +43,7 @@ class SmallScout:
         self.duration = 75                      # Ticks
         self.max_instances_in_sector = 10
         self.diameter = 5
-        self.max_speed = 150                    # MPS
+        self.max_speed = 1750                   # MPS
         self.max_shields = 200
         self.max_armor = 200
         self.max_structure = 200
@@ -57,7 +57,7 @@ class SmallScout:
         self.min_damage = 0
         self.max_damage = 0
         self.accuracy = 0
-        self.acceleration = 25
+        self.acceleration = 400
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
             "move": {"probability": 6, "max_duration": 10, "status": 1},
@@ -81,7 +81,7 @@ class MediumScout:
         self.duration = 125                     # Ticks
         self.max_instances_in_sector = 8
         self.diameter = 7
-        self.max_speed = 250                    # MPS
+        self.max_speed = 2500                   # MPS
         self.max_shields = 250
         self.max_armor = 200
         self.max_structure = 400
@@ -95,7 +95,7 @@ class MediumScout:
         self.min_damage = 5
         self.max_damage = 20
         self.accuracy = 40
-        self.acceleration = 25
+        self.acceleration = 500
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
             "move": {"probability": 7, "max_duration": 10, "status": 1},
@@ -119,7 +119,7 @@ class LargeScout:
         self.duration = 100                     # Ticks
         self.max_instances_in_sector = 6
         self.diameter = 10
-        self.max_speed = 300                    # MPS
+        self.max_speed = 3000                   # MPS
         self.max_shields = 500
         self.max_armor = 500
         self.max_structure = 500
@@ -133,11 +133,11 @@ class LargeScout:
         self.min_damage = 25
         self.max_damage = 40
         self.accuracy = 60
-        self.acceleration = 25
+        self.acceleration = 500
         self.actions = {
             "appear": {"probability": 0, "max_duration": 5, "status": 0},
             "move": {"probability": 8, "max_duration": 12, "status": 1},
-            "leave": {"probability": 3, "max_duration": 15, "status": 0},
+            "leave": {"probability": 2, "max_duration": 15, "status": 0},
         }
         pass
 

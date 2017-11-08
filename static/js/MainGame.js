@@ -15,7 +15,8 @@ mGame.prototype = {
 			dataType: "json",
 			success: function (r) {
 				console.log(r);
-				$("#map_holder").empty();
+				$("#event_log").empty();
+				map.draw_objects(r);
 				for(var obj_id in r) {
 					var s = '<li class="ufo" id="' + obj_id + '">'
 					s += r[obj_id].objType + ' - ';
@@ -26,7 +27,7 @@ mGame.prototype = {
 					s += '- ' + enums.UfoStatuses[r[obj_id].status];
 					s += ' <span class="approach">&gt;&gt;</span>'
 					s += '</li>';
-					$("#map_holder").append(s);
+					$("#event_log").append(s);
 				}
                 $(".ufo .approach").click(function(e){
                     $.ajax({
@@ -56,5 +57,6 @@ mGame.prototype = {
 
     LoadMain: function () {
 		p.refreshPlayer(p);
+		map.init_map();
     }
 }

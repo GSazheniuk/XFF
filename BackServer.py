@@ -67,9 +67,9 @@ class BackBoneServer:
                 available_actions = []
                 for action in ufo.data["actions"]:
                     available_actions.extend([action]*ufo.data["actions"][action]["probability"])
-                print(available_actions)
+                # print(available_actions)
                 new_action = available_actions[random.randint(0, len(available_actions)-1)]
-                print("New Action: ", new_action)
+                # print("New Action: ", new_action)
 
                 SharedData.add_map_action(None, ufo, new_action)
                 pass

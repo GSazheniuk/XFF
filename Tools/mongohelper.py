@@ -1,4 +1,5 @@
 import config
+import random
 
 from pymongo import MongoClient, errors
 
@@ -22,9 +23,9 @@ class MongoHelper:
         except errors.ServerSelectionTimeoutError:
             ufos.append({
                 "_id": 0,
-                "probability": 45000,
+                "probability": 145000,
                 "max_crew_level": 1,
-                "diameter": 3,
+                "diameter": random.randint(3, 20),
                 "ufo_type": "Probe",
                 "max_structure": 100,
                 "max_loot": 3,
@@ -36,12 +37,12 @@ class MongoHelper:
                 "duration": 25,
                 "max_instances_in_sector": 10,
                 "max_shields": 100,
-                "max_speed": 100,
-                "acceleration": 15,
+                "max_speed": 3000,
+                "acceleration": 500,
                 "actions": {
                     "appear": {"probability": 0, "max_duration": 5, "status": 0},
-                    "move": {"probability": 6, "max_duration": 10, "status": 1},
-                    "leave": {"probability": 4, "max_duration": 15, "status": 0},
+                    "move": {"probability": 8, "max_duration": 10, "status": 1},
+                    "leave": {"probability": 3, "max_duration": 7, "status": 0},
                 }
             })
             pass

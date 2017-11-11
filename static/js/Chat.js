@@ -105,8 +105,11 @@ Chat.prototype = {
 				
 				for(i=0; i<msgs.length; i++) {
 					var s = $('#msgTpl').children().clone();
-					console.log(msgs[i].message[1]+":"+msgs[i].message[2]);
-					$(s).text(msgs[i].message[1]+":"+msgs[i].message[2]);
+					var sb = $('#msgBodyTpl').clone();
+					//console.log(msgs[i].message[1]+":"+msgs[i].message[2]);
+					$(s).text(msgs[i].message[1]+": ");
+					$(sb).text(msgs[i].message[2]);
+					$(s).append(sb);
 					$(s).toggle();
 					$(".chat_area ul").append(s);
 				}

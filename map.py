@@ -30,6 +30,13 @@ class MapSector:
     def get_objects_on_map(self):
         return self.objects
 
+    def get_random_point(self):
+        point = {
+            "X": random.randint(0, self.Width),
+            "Y": random.randint(0, self.Height),
+        }
+        return point
+
     def get_id(self):
         return self._id
 

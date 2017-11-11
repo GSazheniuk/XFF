@@ -41,6 +41,6 @@ class ApproachObject(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
         player = SharedData.get_current_player(self)
         object_id = tornado.escape.json_decode(self.request.body)["object_id"]
-        SharedData.add_map_action(player, object_id, config.MapActionTypes.ACTION_TYPE_APPROACH)
+        # SharedData.add_map_action(player, object_id, config.MapActionTypes.ACTION_TYPE_APPROACH)
         self.write("{}")
         pass

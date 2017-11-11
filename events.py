@@ -1,51 +1,31 @@
 import config
 import random
 import BaseMapObject
+import map
+import MapActions
+import SharedData
 
-import FlyingObjects
 
+class Action:
+    def __init__(self, action_type, sender, **kwargs):
+        self.action_type = action_type
+        if action_type == config.MapActionTypes.ACTION_TYPE_APPEAR:
+            self._proceed = MapActions.appear
+        elif action_type == config.MapActionTypes.ACTION_TYPE_LEAVE:
+            self._proceed = MapActions.disappear
+        elif action_type == config.MapActionTypes.ACTION_TYPE_MOVE_TO_POINT:
+            self._proceed = MapActions.move_to_point
 
-class BaseEvent:
-    def __init__(self, probability, duration):
-        self.probability = probability
-        self.duration = duration
-        self.id = random.randint(0, config.EVENTS_MAX_ID)
-        self.objects = []
-        self.sector = None
+        kwargs['object'] = sender
+        self.params = kwargs
         pass
 
-    def tick(self):
-        self.duration -= 1
-        print("event id: %s duration %s" % (self.id, self.duration))
-        pass
-
-    def end(self):
-        print('end called for %s' % self.id)
-        for o in self.objects:
-            self.sector.remove_object(o)
-        pass
-
-    def __del__(self):
-        print(self.id, "-- event ended")
-        pass
-
-
-class SmallUFO(BaseEvent):
-    def __init__(self, ms):
-        super(SmallUFO, self).__init__(config.EVENTS_SMALL_UFO_PROBABILITY, config.EVENTS_SMALL_UFO_DURATION)
-        o = FlyingObjects.FlyingSmallUFO(random.randint(0, ms.X), random.randint(0, ms.Y))
-        self.objects.append(o)
-        self.sector = ms
-        ms.add_object(o)
-        print('Event Created')
-        print(self.id)
-        print(o.id)
-        pass
+    def proceed(self):
+        return self._proceed(**self.params)
 
 
 class FlyingUFO:
-    def __init__(self, o, ms):
-        self.duration = o['duration']
+    def __init__(self, o, ms: map.MapSector):
         self.id = random.randint(0, config.EVENTS_MAX_ID)
         self.data = o
         self.map_object = BaseMapObject.BaseMapObject(
@@ -57,13 +37,46 @@ class FlyingUFO:
         )
         self.sector = ms
         ms.add_object(self.map_object)
-        print('%s appeared in %s (%s) for %s ticks' % (o['ufo_type'], ms.Name, self.id, self.duration))
-        print(self.id)
-        print(o['_id'])
+        self.duration = self.get_action_duration_value(config.MapActionTypes.ACTION_TYPE_APPEAR)
+        self.action = Action(config.MapActionTypes.ACTION_TYPE_APPEAR, self, **{})
+        pass
+
+    def get_action_duration_value(self, action_type):
+        if action_type not in self.data['actions']:
+            return 0
+        else:
+            return self.data['actions'][action_type]['max_duration']
+        pass
+
+    def next_action(self):
+        available_actions = []
+        for action in self.data["actions"]:
+            available_actions.extend([action] * self.data["actions"][action]["probability"])
+            pass
+        new_action = available_actions[random.randint(0, len(available_actions) - 1)]
+
+        if new_action == config.MapActionTypes.ACTION_TYPE_MOVE_TO_POINT:
+            self.duration = self.data["actions"][new_action]["max_duration"]
+            self.action = Action(new_action, self, **{"point": self.sector.get_random_point()})
+        elif new_action == config.MapActionTypes.ACTION_TYPE_LEAVE:
+            self.duration = self.data["actions"][new_action]["max_duration"]
+            self.action = Action(new_action, self, **{})
+        pass
+
+    def map_action(self):
+        action_result = self.action.proceed()
+        if action_result == 1:
+            self.next_action()
+        elif action_result == -1:
+            self.end()
+            del SharedData.AllFlyingObjects[self.id]
+            pass
         pass
 
     def tick(self):
         # self.duration -= 1
+        if self.action.action_type:
+            self.map_action()
         print("event id: %s duration %s" % (self.id, self.duration))
         pass
 

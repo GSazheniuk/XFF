@@ -58,5 +58,7 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
         SharedData.Chat.subscribe_player_to_channel(player, "local")
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS, player)
 
+        player.CurrentSector.add_object(player.MapObject)
+
         self.redirect("/")
         pass

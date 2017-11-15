@@ -22,7 +22,8 @@ mapProto.prototype = {
     draw_ufo: function(o){
         ctx = this.canvas_context;
         var grd = ctx.createRadialGradient(o.X / 2000, o.Y / 2000, 0, o.X / 2000, o.Y / 2000, o.R);
-        grd.addColorStop(0, "red");
+        if (o.objType == 10) {grd.addColorStop(0, "green");}
+        else { grd.addColorStop(0, "red");};
         grd.addColorStop(0.8, "silver");
         grd.addColorStop(1, "white");
         ctx.beginPath();

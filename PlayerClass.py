@@ -2,16 +2,17 @@ import json
 import random
 
 import config
+import map
 
 from BaseMapObject import BaseMapObject
 
 
 class Player:
-    def __init__(self, name, last_name, organization, token, sector):
+    def __init__(self, name, last_name, organization, token, sector: map.MapSector):
         self.MapObject = BaseMapObject(
-            random.randint(0, 99999),
-            random.randint(0, 99999),
-            1,
+            random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
+            random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
+            5,
             config.MapObjectTypes.PLAYER,
             token,
         )

@@ -25,7 +25,8 @@ Player.prototype = {
         plr.attributes = player.Attributes;
     },
 
-    refreshPlayer: function (owner) {
+    refreshPlayer: function () {
+        owner = this;
         $.ajax({
             type: "GET",
             contentType: "application/json; charset=utf-8",
@@ -39,8 +40,7 @@ Player.prototype = {
 				
 				owner.isLoaded = 1;
 				owner.data = r;
-				mainGame.getMapObjects(mainGame, 1);
-				owner.displayPlayerInfo(owner);
+				displayPlayerInfo(owner);
 //                console.log(owner);
 
                 // if (response != null && response.RefreshPlayerResult != null) {
@@ -52,19 +52,11 @@ Player.prototype = {
                     // owner.refreshPlayerCallback();
             },
             error: function (message) {
-                console.error("error has occured");
+                console.error("error has occurred");
                 console.error(message);
             }
         })
     },
-	
-	displayPlayerInfo(pl){
-		$("#player_info").empty();
-		$("#player_info").append(pl.data.Name+"<br />");
-		$("#player_info").append("(" + pl.data.Organization.Name+")<br />");
-		$("#player_info").append("X: " + pl.data.MapObject.X);
-		$("#player_info").append("  |   Y: " + pl.data.MapObject.Y+"<br />");
-	},
 
     getAttributeValue: function (a, b) {
         var attr = this.attributes.find(x=> x.AttributeType === a && x.Attribute === b);

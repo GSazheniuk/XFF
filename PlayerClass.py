@@ -27,6 +27,7 @@ class Player:
         self.Attributes['Memory'] = 20
         self.Attributes['Perception'] = 20
         self.Attributes['Endurance'] = 20
+        self.Attributes['Charisma'] = 20
         self.Aircraft = {
             "_id": 0,
             "diameter": 3,

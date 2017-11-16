@@ -1,5 +1,4 @@
 import config
-import random
 
 from pymongo import MongoClient, errors
 
@@ -25,7 +24,7 @@ class MongoHelper:
                 "_id": 0,
                 "probability": 145000,
                 "max_crew_level": 1,
-                "diameter": random.randint(3, 20),
+                "diameter": 3,
                 "ufo_type": "Probe",
                 "max_structure": 100,
                 "max_loot": 3,

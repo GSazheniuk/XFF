@@ -4,8 +4,8 @@ mGame.prototype = {
     constructor: function () {
     },
 	
-	getMapObjects: function (e, refresh_all) {
-		var obj = e;
+	getMapObjects: function (refresh_all) {
+		var obj = this;
 
 		$.ajax({
 			type: "POST",
@@ -45,7 +45,7 @@ mGame.prototype = {
                         }
                     })
                 });
-				obj.getMapObjects(obj, 0);
+				obj.getMapObjects(0);
 				//console.log(pl);
 			},
 			error: function (message) {
@@ -56,7 +56,6 @@ mGame.prototype = {
 	},
 
     LoadMain: function () {
-		p.refreshPlayer(p);
 		map.init_map();
     }
 }

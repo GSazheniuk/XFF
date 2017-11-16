@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Python Hello World</title>
+    <title>Player Home for ...</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
@@ -13,10 +13,9 @@
     <script src="js/Player.js" type="text/javascript"></script>
     <script src="js/MainGame.js" type="text/javascript"></script>
     <script src="js/Chat.js" type="text/javascript"></script>
-    <script src="js/map.js" type="text/javascript"></script>
 </head>
 <body>
-<div class="container">
+<div class="container" style="height: 99%">
     <div class="row">
         <div class="col-sm-12 text-center">
             <span><a href="/player_view">Home</a></span>
@@ -24,21 +23,28 @@
             <span><a href="/map_view">Map</a></span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <div class="col-sm-6 text-center" id="map_holder" style="position:relative;display:none;height:505px;">
-                <img src="/images/map.png" alt="" style="position:absolute;top:0;left:0"/>
-                <canvas id="map_canvas" width="500" height="500" style="border:1px solid #606060;position:absolute;top:0;left:0"></canvas>
+    <div class="row" style="height: 75%">
+        <div class="col-sm-4 text-center panel panel-default" style="height:98%;">
+            <div class="panel-body" id="player_info">
+                <div class="well well-sm" id="player_name">Event log</div>
             </div>
-            <div class="col-sm-6 text-center" id="right_panel">
-                <div class="row">
-                    <div class="col-sm-12 text-center" id="player_info"></div>
-                </div>
+        </div>
+        <div class="col-sm-8 text-center panel panel-default poiret" style="height:98%;">
+            <div class="panel-body" id="playerSkills">
+                Event log<br />
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 text-left poiret" id="event_log"></div>
+    <div class="panel panel-default poiret pre-scrollable" style="height:18%;">
+        <div class="panel-body" id="event_log">
+            Event log<br />
+            Event log<br />
+            Event log<br />
+            Event log<br />
+            Event log<br />
+            Event log<br />
+            Event log<br />
+        </div>
     </div>
     <script src="https://use.fontawesome.com/45e03a14ce.js" type="text/javascript"></script>
     <div class="chat_container">
@@ -59,7 +65,6 @@
                 </div><!--chat_area-->
                 <div class="message_write">
                     <textarea class="form-control poiret" id="chatText" placeholder="type a message"></textarea>
-                    <span class="btn btn-success orbitron" id="chatSend">Send</span>
                 </div>
             </div>
         </div> <!--message_section-->
@@ -81,21 +86,22 @@
 <span id="msgBodyTpl" class="poiret"></span>
 <script type="text/javascript">
     function displayPlayerInfo(pl){
-		$("#player_info").empty();
-		$("#player_info").append(pl.data.Name+"<br />");
-		$("#player_info").append("(" + pl.data.Organization.Name+")<br />");
-		$("#player_info").append("X: " + pl.data.MapObject.X);
-		$("#player_info").append("  |   Y: " + pl.data.MapObject.Y+"<br />");
+		$("#player_name").empty();
+		$("#player_name").append(pl.data.Name+"<br />");
+		$("#player_name").append("(" + pl.data.Organization.Name+")");
+
+		var attrs = pl.data.Attributes;
+		for (var pr in attrs){
+		    s = "<div class='col-sm-6'><span>"+pr+"</span>";
+		    s += "<span class='poiret'>: "+attrs[pr]+"</span></div>";
+		    $("#player_info").append(s);
+		}
 	}
 
     var p = new Player();
     p.refreshPlayer();
-    var mainGame = new mGame();
-    var chat = new Chat();
-    var map = new mapProto();
 
-    mainGame.LoadMain();
-    mainGame.getMapObjects(1);
+    var chat = new Chat();
     chat.LoadChat(chat);
 </script>
 </body>

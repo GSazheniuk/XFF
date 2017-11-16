@@ -8,7 +8,17 @@ import MapHandlers
 import PlayerHandlers
 
 
-class MainHandler(tornado.web.RequestHandler):
+class RootHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("html\player_page.html", messages=[])
+
+
+class ViewPlayerHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("html\player_page.html", messages=[])
+
+
+class ViewMapHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("html\home.html", messages=[])
 
@@ -18,7 +28,9 @@ class FrontWatchServer:
     def __init__(self):
         self.app = tornado.web.Application(
                 [
-                    (r"/", MainHandler),
+                    (r"/", RootHandler),
+                    (r"/map_view", ViewMapHandler),
+                    (r"/player_view", ViewPlayerHandler),
                     (r"/player/login", PlayerHandlers.PlayerLoginPlayer),
                     (r"/player/getData", PlayerHandlers.PlayerGetData),
                     # Map requests

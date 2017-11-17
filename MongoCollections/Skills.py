@@ -1,4 +1,5 @@
 import json
+import config
 
 
 class Skill:
@@ -8,7 +9,7 @@ class Skill:
         self.Reqs = reqs
         self.Level = 0
         self.Progress = 0
-        self.Status = 0
+        self.Status = config.SkillStatuses.SKILL_AVAILABLE if len(reqs) == 0 else config.SkillStatuses.SKILL_UNAVAILABLE
         pass
 
 

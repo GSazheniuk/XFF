@@ -105,12 +105,17 @@
 		    s = "<li><a href='#id_"+skill_group._id
 		    s += "' data-toggle='tab' aria-expanded='false'>"+skill_group.GroupName+"</a></li>"
 		    $("#skill_tabs").append(s);
+            s = '<div class="tab-pane fade" id="id_'+skill_group._id+'">';
 		    for (var sk in skill_group.Skills){
 		        skill = skill_group.Skills[sk];
-		        s = '<div class="tab-pane fade" id="id_'+skill_group._id+'">';
-                s += '<p>'+skill.Name+'</p></div>';
-		        $("#skill_tab_contents").append(s);
+                s += '<div class="col-sm-4">'+skill.Name;
+                if (skill.Status == enums.SkillStatuses.Available){
+                    s += '<a href="#" class="learn_skill" data="'+skill.Name+'">+</a>';
+                }
+                s += '</div>';
 		    }
+            s += '</div>';
+            $("#skill_tab_contents").append(s);
 		}
 	}
 

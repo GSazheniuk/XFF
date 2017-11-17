@@ -3,6 +3,7 @@ import random
 
 import config
 import map
+import Skills
 
 from BaseMapObject import BaseMapObject
 
@@ -28,6 +29,11 @@ class Player:
         self.Attributes['Perception'] = 20
         self.Attributes['Endurance'] = 20
         self.Attributes['Charisma'] = 20
+
+        self.Skills = []
+        self.Skills.append(Skills.BaseSkills())
+        self.Skills.append(Skills.TechSkills())
+
         self.Aircraft = {
             "_id": 0,
             "diameter": 3,
@@ -56,5 +62,10 @@ class Player:
         res += ', "Organization": %s' % self.Organization.toJSON()
         res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
         res += ', "MapObject": %s' % json.dumps(self.MapObject.get_dict())
-        res += '}'
+        res += ', "Skills": ['
+        for s in self.Skills:
+            res += s.to_json() + ','
+            pass
+        res = res[:-1]
+        res += ']}'
         return res

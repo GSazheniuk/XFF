@@ -3,5 +3,11 @@ function distance(aX, aY, bX, bY){
 }
 
 enums = {
-    UfoStatuses: ['Appearing', 'Moving', 'Leaving', 'Engaging', 'Fleeing', 'Crashed']
+    UfoStatuses: ['Appearing', 'Moving', 'Leaving', 'Engaging', 'Fleeing', 'Crashed'],
+    SkillStatuses: {
+        Available: 0,
+        Unavailable: 1,
+        InProgress: 2,
+        Queued: 3,
+    }
 }

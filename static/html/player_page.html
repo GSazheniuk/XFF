@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="themes/slate.min.css" />
     <link rel="stylesheet" href="themes/main.css" />
     <script src="https://code.jquery.com/jquery-2.2.3.min.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="js/tools.js" type="text/javascript"></script>
     <script src="js/Player.js" type="text/javascript"></script>
     <script src="js/MainGame.js" type="text/javascript"></script>
@@ -30,8 +31,9 @@
             </div>
         </div>
         <div class="col-sm-8 text-center panel panel-default poiret" style="height:98%;">
-            <div class="panel-body" id="playerSkills">
-                Event log<br />
+            <ul class="nav nav-tabs" id="skill_tabs">
+            </ul>
+            <div class="tab-content" id="skill_tab_contents">
             </div>
         </div>
     </div>
@@ -95,6 +97,20 @@
 		    s = "<div class='col-sm-6'><span>"+pr+"</span>";
 		    s += "<span class='poiret'>: "+attrs[pr]+"</span></div>";
 		    $("#player_info").append(s);
+		}
+
+		var skill_groups = pl.data.Skills;
+		for (var sg in skill_groups){
+		    var skill_group = skill_groups[sg];
+		    s = "<li><a href='#id_"+skill_group._id
+		    s += "' data-toggle='tab' aria-expanded='false'>"+skill_group.GroupName+"</a></li>"
+		    $("#skill_tabs").append(s);
+		    for (var sk in skill_group.Skills){
+		        skill = skill_group.Skills[sk];
+		        s = '<div class="tab-pane fade" id="id_'+skill_group._id+'">';
+                s += '<p>'+skill.Name+'</p></div>';
+		        $("#skill_tab_contents").append(s);
+		    }
 		}
 	}
 

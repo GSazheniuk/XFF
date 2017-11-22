@@ -30,9 +30,8 @@ class Player:
         self.Attributes['Endurance'] = 20
         self.Attributes['Charisma'] = 20
 
-        self.Skills = []
-        self.Skills.append(Skills.BaseSkills())
-        self.Skills.append(Skills.TechSkills())
+        self.Skills = Skills.default_skills()
+        self.SkillsQueue = []
 
         self.Aircraft = {
             "_id": 0,
@@ -53,6 +52,41 @@ class Player:
         }
         pass
 
+    def skill_done(self, skill):
+        skill.Level += 1
+        skill.Cost *= 1.3
+        skill.Progress = 0
+
+        if len(skill.Reqs) == 0:
+            skill.Status = config.SkillStatuses.SKILL_AVAILABLE
+        else:
+            skill.Status = config.SkillStatuses.SKILL_UNAVAILABLE
+            pass
+
+        self.SkillsQueue.remove(skill)
+        pass
+
+    def tick(self):
+        if len(self.SkillsQueue) > 0:
+            skill = self.SkillsQueue[0]
+            skill.Status = config.SkillStatuses.SKILL_IN_PROGRESS
+            a1, a2 = self.Attributes[skill.PrimaryAttribute], self.Attributes[skill.SecondaryAttribute]
+            skill.Progress += min(a1 + a2//2, skill.Cost - skill.Progress)
+            if skill.Progress >= skill.Cost:
+                self.skill_done(skill)
+            pass
+        pass
+
+    def add_skill_to_queue(self, skill_name):
+        skills = [sk for sk in self.Skills if sk.Name == skill_name]
+        if len(skills) > 0:
+            skill = skills[0]
+            if skill not in self.SkillsQueue and skill.Status == config.SkillStatuses.SKILL_AVAILABLE:
+                self.SkillsQueue.append(skill)
+                skill.Status = config.SkillStatuses.SKILL_QUEUED
+            pass
+        pass
+
     def toJSON(self):
         res = '{'
         res += '"Name": "%s"' % self.Name
@@ -62,10 +96,7 @@ class Player:
         res += ', "Organization": %s' % self.Organization.toJSON()
         res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
         res += ', "MapObject": %s' % json.dumps(self.MapObject.get_dict())
-        res += ', "Skills": ['
-        for s in self.Skills:
-            res += s.to_json() + ','
-            pass
-        res = res[:-1]
-        res += ']}'
+        res += ', "Skills": ' + json.dumps([skill.__dict__ for skill in self.Skills])
+        res += ', "SkillsQueue": ' + json.dumps([skill.__dict__ for skill in self.SkillsQueue])
+        res += '}'
         return res

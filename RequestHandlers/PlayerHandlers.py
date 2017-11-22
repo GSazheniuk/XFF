@@ -1,4 +1,5 @@
 import tornado.web
+import tornado.escape
 import random
 
 import Waiters
@@ -12,16 +13,12 @@ from PlayerClass import Player
 class PlayerGetData(tornado.web.RequestHandler):
     def initialize(self):
         self.sessionId = self.get_cookie("sessionId")
-        print(self.sessionId)
         pass
 
     def get(self):
-        print('PlayerGetData: ', self.sessionId)
-        print('OnlinePlayers: ', SharedData.OnlinePlayers)
         if self.sessionId in SharedData.OnlinePlayers:
             cp = SharedData.Players[SharedData.OnlinePlayers[self.sessionId]]
             self.write(cp.toJSON().encode())
-            pass
         else:
             self.write(b"{}")
         pass
@@ -61,4 +58,19 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
         player.CurrentSector.add_object(player.MapObject)
 
         self.redirect("/")
+        pass
+
+
+class PlayerAddSkill2Queue(tornado.web.RequestHandler):
+    def post(self):
+        session_id = self.get_cookie("sessionId")
+        post_data = tornado.escape.json_decode(self.request.body)
+        skill_name = post_data["skill_name"]
+
+        if session_id in SharedData.OnlinePlayers:
+            cp = SharedData.Players[SharedData.OnlinePlayers[session_id]]
+            cp.add_skill_to_queue(skill_name)
+            pass
+
+        self.write(b"{}")
         pass

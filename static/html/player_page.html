@@ -27,7 +27,7 @@
     <div class="row" style="height: 75%">
         <div class="col-sm-4 text-center panel panel-default" style="height:98%;">
             <div class="panel-body" id="player_info">
-                <div class="well well-sm" id="player_name">Event log</div>
+                <div class="well well-sm" id="player_name"></div>
             </div>
         </div>
         <div class="col-sm-8 text-center panel panel-default poiret" style="height:98%;">
@@ -92,6 +92,8 @@
 		$("#player_name").append(pl.data.Name+"<br />");
 		$("#player_name").append("(" + pl.data.Organization.Name+")");
 
+        $('#player_info').empty();
+        $("#player_info").append('<div class="well well-sm" id="player_name"></div>');
 		var attrs = pl.data.Attributes;
 		for (var pr in attrs){
 		    s = "<div class='col-sm-6'><span>"+pr+"</span>";
@@ -99,24 +101,28 @@
 		    $("#player_info").append(s);
 		}
 
-		var skill_groups = pl.data.Skills;
-		for (var sg in skill_groups){
-		    var skill_group = skill_groups[sg];
-		    s = "<li><a href='#id_"+skill_group._id
-		    s += "' data-toggle='tab' aria-expanded='false'>"+skill_group.GroupName+"</a></li>"
-		    $("#skill_tabs").append(s);
-            s = '<div class="tab-pane fade" id="id_'+skill_group._id+'">';
-		    for (var sk in skill_group.Skills){
-		        skill = skill_group.Skills[sk];
-                s += '<div class="col-sm-4">'+skill.Name;
-                if (skill.Status == enums.SkillStatuses.Available){
-                    s += '<a href="#" class="learn_skill" data="'+skill.Name+'">+</a>';
-                }
-                s += '</div>';
+        $("#skill_tab_contents").empty();
+        $("#skill_tabs").empty();
+		var skills = pl.data.Skills;
+		var skill_groups = new Set();
+		for (var k in skills){
+		    var skill = skills[k];
+		    if (!skill_groups.has(skill.SkillGroup)){
+                skill_groups.add(skill.SkillGroup);
+                s = "<li><a href='#sg_id_"+skill_groups.size;
+                s += "' data-toggle='tab' aria-expanded='false'>"+skill.SkillGroup+"</a></li>";
+                $("#skill_tabs").append(s);
 		    }
+            var sg_id = Array.from(skill_groups).indexOf(skill.SkillGroup) + 1;
+            s = '<div class="tab-pane fade" id="sg_id_'+sg_id+'">';
+            s += '<div class="col-sm-4">'+skill.Name;
+            if (skill.Status == enums.SkillStatuses.Available){
+                s += '<a href="#" class="learn_skill" data="'+skill.Name+'">+</a>';
+            }
             s += '</div>';
             $("#skill_tab_contents").append(s);
 		}
+        $(".learn_skill").click(function(e){p.addSkillToQueue($(this).attr('data'));event.preventDefault();});
 	}
 
     var p = new Player();

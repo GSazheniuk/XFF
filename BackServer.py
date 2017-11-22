@@ -52,6 +52,11 @@ class BackBoneServer:
             pass
 
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
+
+        for p in SharedData.Players:
+            player = SharedData.Players[p]
+            player.tick()
+            pass
         pass
 
     def get_available_ufos(self, probability):

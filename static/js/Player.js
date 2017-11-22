@@ -58,6 +58,23 @@ Player.prototype = {
         })
     },
 
+    addSkillToQueue: function (skill){
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "http://localhost:8081/player/addSkill",
+            data: JSON.stringify({"skill_name": skill}),
+            dataType: "json",
+            success: function (r) {
+                p.refreshPlayer();
+            },
+            error: function (message) {
+                console.error("addSkillToQueue error has occurred");
+                console.error(message);
+            }
+        })
+    },
+
     getAttributeValue: function (a, b) {
         var attr = this.attributes.find(x=> x.AttributeType === a && x.Attribute === b);
         if (attr != null)

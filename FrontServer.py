@@ -33,6 +33,7 @@ class FrontWatchServer:
                     (r"/player_view", ViewPlayerHandler),
                     (r"/player/login", PlayerHandlers.PlayerLoginPlayer),
                     (r"/player/getData", PlayerHandlers.PlayerGetData),
+                    (r"/player/addSkill", PlayerHandlers.PlayerAddSkill2Queue),
                     # Map requests
                     (r"/map/getObjects", MapHandlers.MapGetObjects),
                     (r"/map/approachObject", MapHandlers.ApproachObject),

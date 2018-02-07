@@ -10,6 +10,7 @@ from map import Map
 OnlinePlayers = {}
 Players = {}
 AllFlyingObjects = {}
+AllBases = {}
 Sessions = {}
 Chat = Chat()
 Map = Map(1, 1)

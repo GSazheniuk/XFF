@@ -1,6 +1,7 @@
 from OrganizationClass import Organization
 import random
 
+
 class NPCOrganizations:
     def __init__(self):
         self.AllOrgs = []
@@ -33,5 +34,3 @@ class NPCOrganizations:
 
     def get_random_org(self):
         return random.choice(self.AllOrgs)
-
-    

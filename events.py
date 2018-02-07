@@ -32,8 +32,9 @@ class FlyingUFO:
             random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
             random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
             o['diameter'],
-            o['ufo_type'],
-            self.id
+            o['_id'],
+            self.id,
+            o['ufo_type']
         )
         self.sector = ms
         ms.add_object(self.map_object)

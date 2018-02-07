@@ -1,11 +1,12 @@
 class BaseMapObject:
-    def __init__(self, x, y, r, obj_type, object_id):
+    def __init__(self, x, y, r, obj_type, object_id, name):
         self.X = x
         self.Y = y
         self.R = r
         self.objType = obj_type
         self.id = object_id
         self.status = 0
+        self.name = name
         pass
 
     def __del__(self):

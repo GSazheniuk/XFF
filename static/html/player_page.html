@@ -115,7 +115,7 @@
 		    }
             var sg_id = Array.from(skill_groups).indexOf(skill.SkillGroup) + 1;
             s = '<div class="tab-pane fade" id="sg_id_'+sg_id+'">';
-            s += '<div class="col-sm-4">'+skill.Name;
+            s += '<div class="col-sm-4">'+skill.Name+' (Lvl.'+skill.Level+')';
             if (skill.Status == enums.SkillStatuses.Available){
                 s += '<a href="#" class="learn_skill" data="'+skill.Name+'">+</a>';
             }

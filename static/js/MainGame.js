@@ -18,16 +18,29 @@ mGame.prototype = {
 				$("#event_log").empty();
 				map.draw_objects(r);
 				for(var obj_id in r) {
-					var s = '<li class="ufo" id="' + obj_id + '">'
-					s += r[obj_id].objType + ' - ';
-					s += r[obj_id].X + ' : ';
-					s += r[obj_id].Y + ' - ';
-					s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
-					s += ' miles away. ';
-					s += '- ' + enums.UfoStatuses[r[obj_id].status];
-					s += ' <span class="approach">&gt;&gt;</span>'
-					s += '</li>';
-					$("#event_log").append(s);
+				    if (r[obj_id].objType < 20) {
+                        var s = '<li class="ufo" id="' + obj_id + '">'
+                        s += r[obj_id].name + ' - ';
+                        s += r[obj_id].X + ' : ';
+                        s += r[obj_id].Y + ' - ';
+                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
+                        s += ' miles away. ';
+                        s += '- ' + enums.UfoStatuses[r[obj_id].status];
+                        s += ' <span class="approach">&gt;&gt;</span>'
+                        s += '</li>';
+                        $("#event_log").append(s);
+					}
+				    if (r[obj_id].objType == 1000) {
+                        var s = '<li class="bunker" id="' + obj_id + '">'
+                        s += r[obj_id].name + ' - ';
+                        s += r[obj_id].X + ' : ';
+                        s += r[obj_id].Y + ' - ';
+                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
+                        s += ' miles away. ';
+                        s += ' <span class="approach">&gt;&gt;</span>'
+                        s += '</li>';
+                        $("#event_log").append(s);
+					}
 				}
                 $(".ufo .approach").click(function(e){
                     $.ajax({

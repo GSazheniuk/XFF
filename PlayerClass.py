@@ -10,14 +10,15 @@ from BaseMapObject import BaseMapObject
 
 class Player:
     def __init__(self, name, last_name, organization, token, sector: map.MapSector):
+        self.Name = '%s %s' % (name, last_name)
         self.MapObject = BaseMapObject(
             random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
             random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
             5,
             config.MapObjectTypes.PLAYER,
             token,
+            self.Name
         )
-        self.Name = '%s %s' % (name, last_name)
         self.Organization = organization
         self.Token = token
         self.CurrentSector = sector

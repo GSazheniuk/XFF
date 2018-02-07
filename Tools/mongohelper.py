@@ -19,7 +19,8 @@ class MongoHelper:
         try:
             for u in self.ufos.find():
                 ufos.append(u)
-        except errors.ServerSelectionTimeoutError:
+        except (errors.ServerSelectionTimeoutError, TimeoutError, errors.AutoReconnect) as err:
+            print(err)
             ufos.append({
                 "_id": 0,
                 "probability": 145000,

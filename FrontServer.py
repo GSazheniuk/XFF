@@ -2,15 +2,21 @@ import tornado.escape
 import tornado.ioloop
 import tornado.web
 import os.path
+from tornado import gen
 
-import ChatHandlers
-import MapHandlers
-import PlayerHandlers
+from RequestHandlers import ChatHandlers
+from RequestHandlers import MapHandlers
+from RequestHandlers import PlayerHandlers
+from RequestHandlers import BunkerHandlers
 
+import Waiters
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("html\player_page.html", messages=[])
+        if not self.get_cookie("sessionId"):
+            self.render("html\login.html")
+        else:
+            self.render("html\player_page.html", messages=[])
 
 
 class ViewPlayerHandler(tornado.web.RequestHandler):
@@ -20,7 +26,23 @@ class ViewPlayerHandler(tornado.web.RequestHandler):
 
 class ViewMapHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("html\home.html", messages=[])
+        self.render("html\geoscape.html", messages=[])
+
+
+class ViewBunkerHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("html\\bunker.html", messages=[])
+
+
+class ZKillTestHandler(tornado.web.RequestHandler):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_CHAT_MESSAGES)
+        while not self.request.connection.stream.closed():
+            kill = yield self.future
+            print(kill)
+            self.write(kill)
+            self.flush()
 
 
 class FrontWatchServer:
@@ -30,20 +52,29 @@ class FrontWatchServer:
                 [
                     (r"/", RootHandler),
                     (r"/map_view", ViewMapHandler),
+                    (r"/base_view", ViewBunkerHandler),
                     (r"/player_view", ViewPlayerHandler),
                     (r"/player/login", PlayerHandlers.PlayerLoginPlayer),
                     (r"/player/getData", PlayerHandlers.PlayerGetData),
                     (r"/player/addSkill", PlayerHandlers.PlayerAddSkill2Queue),
                     # Map requests
                     (r"/map/getObjects", MapHandlers.MapGetObjects),
+                    (r"/map/objects/([0-9]+)", MapHandlers.ObjectById),
+                    (r"/map/all-objects", MapHandlers.MapAllObjects),
                     (r"/map/approachObject", MapHandlers.ApproachObject),
+                    # Bunker requests
+                    (r"/bunker/getData", BunkerHandlers.BunkerGetInfo),
+                    (r"/bunker/recruitSoldier", BunkerHandlers.BunkerRecruitSoldier),
                     # Chat requests
                     (r"/chat/getPlayers", ChatHandlers.ChatGetPlayers),
                     (r"/chat/getMessages", ChatHandlers.ChatGetMessages),
                     (r"/chat/gotMessages", ChatHandlers.ChatGotMessages),
                     (r"/chat/sendMessage", ChatHandlers.ChatSendMessage),
+                    # test stuff
+                    (r"/zkill", ZKillTestHandler),
                     # Static resources handlers
                     (r"/themes/(.*)", tornado.web.StaticFileHandler, {"path": "static\\themes\\"}),
+                    (r"/data/(.*)", tornado.web.StaticFileHandler, {"path": "static\\Data\\"}),
                     (r"/js/(.*)", tornado.web.StaticFileHandler, {'path': 'static\\js\\'}),
                     (r"/images/(.*)", tornado.web.StaticFileHandler, {"path": "static\\images\\"}),
                     ],

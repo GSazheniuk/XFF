@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XFF - Geoscape</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+    <link rel="stylesheet" href="themes/slate.min.css" />
+    <link rel="stylesheet" href="themes/main.css" />
+    <script src="js/tools.js" type="text/javascript"></script>
+    <script src="js/Player.js" type="text/javascript"></script>
+    <script src="js/MainGame.js" type="text/javascript"></script>
+    <script src="js/Chat.js" type="text/javascript"></script>
+    <script src="js/map.js" type="text/javascript"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.12.0/d3.min.js" integrity="sha256-+9Mf3cAVmxxudDsr1XwXUeRZFtvdWVYdq5/vcgiYyNU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" integrity="sha256-tHoAPGoNdhIR28YHl9DWLzeRfdwigkH7OCBXMrHXhoM=" crossorigin="anonymous"></script>
+    <style>
+        .country:hover {
+            fill: yellow;
+            stroke-width: 1px;
+        }
+
+        .country {
+            fill: green;
+            stroke-width: 0.5px;
+        }
+
+        .globe-filter {
+            fill: #606060;
+            stroke: #000;
+            filter: url(#glow);
+        }
+
+        .globe {
+            fill: blue;
+            stroke: #000;
+        }
+
+        .graticule {
+            fill: transparent;
+            stroke: #ccc;
+            stroke-width: 0.25px;
+        }
+
+        .labels {
+            font: 8px sans-serif;
+            fill: black;
+            opacity: .5;
+        }
+
+        .point{
+          opacity:.6;
+          r: 0.5;
+        }
+
+        .ufo{
+          opacity:.9;
+          fill: red;
+          r: 0.5;
+        }
+
+        .bunker{
+          fill: transparent;
+          stroke: cyan;
+          stroke-width: 1px;
+        }
+        .bunker-filter{
+          fill: transparent;
+          stroke: cyan;
+          stroke-width: 1px;
+          filter: url(#glow-bunker);
+        }
+    </style>
+</head>
+<body style="background-color: black">
+    <div class='container-fluid'>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <span><a href="/player_view">Home</a></span>
+                <span>|</span>
+                <span><a href="/map_view">Map</a></span>
+                <span>|</span>
+                <span><a href="/base_view">Bunker</a></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <div class="col-sm-8 text-center" id="map_holder"></div>
+                <div class="col-sm-4 text-center" id="right_panel">
+                    <div class="row">
+                        <div class="col-sm-12 text-center" id="player_info"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-left poiret" id="event_log"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://use.fontawesome.com/45e03a14ce.js" type="text/javascript"></script>
+    </div>
+<script type="text/javascript">
+    class Versor {
+      static fromAngles([l, p, g]) {
+        l *= Math.PI / 360;
+        p *= Math.PI / 360;
+        g *= Math.PI / 360;
+        const sl = Math.sin(l), cl = Math.cos(l);
+        const sp = Math.sin(p), cp = Math.cos(p);
+        const sg = Math.sin(g), cg = Math.cos(g);
+        return [
+          cl * cp * cg + sl * sp * sg,
+          sl * cp * cg - cl * sp * sg,
+          cl * sp * cg + sl * cp * sg,
+          cl * cp * sg - sl * sp * cg
+        ];
+      }
+      static toAngles([a, b, c, d]) {
+        return [
+          Math.atan2(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)) * 180 / Math.PI,
+          Math.asin(Math.max(-1, Math.min(1, 2 * (a * c - d * b)))) * 180 / Math.PI,
+          Math.atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * 180 / Math.PI
+        ];
+      }
+      static interpolateAngles(a, b) {
+        const i = Versor.interpolate(Versor.fromAngles(a), Versor.fromAngles(b));
+        return t => Versor.toAngles(i(t));
+      }
+      static interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]) {
+        a2 -= a1, b2 -= b1, c2 -= c1, d2 -= d1;
+        const x = new Array(4);
+        return t => {
+          const l = Math.hypot(x[0] = a1 + a2 * t, x[1] = b1 + b2 * t, x[2] = c1 + c2 * t, x[3] = d1 + d2 * t);
+          x[0] /= l, x[1] /= l, x[2] /= l, x[3] /= l;
+          return x;
+        };
+      }
+      static interpolate([a1, b1, c1, d1], [a2, b2, c2, d2]) {
+        let dot = a1 * a2 + b1 * b2 + c1 * c2 + d1 * d2;
+        if (dot < 0) a2 = -a2, b2 = -b2, c2 = -c2, d2 = -d2, dot = -dot;
+        if (dot > 0.9995) return Versor.interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]);
+        const theta0 = Math.acos(Math.max(-1, Math.min(1, dot)));
+        const x = new Array(4);
+        const l = Math.hypot(a2 -= a1 * dot, b2 -= b1 * dot, c2 -= c1 * dot, d2 -= d1 * dot);
+        a2 /= l, b2 /= l, c2 /= l, d2 /= l;
+        return t => {
+          const theta = theta0 * t;
+          const s = Math.sin(theta);
+          const c = Math.cos(theta);
+          x[0] = a1 * c + a2 * s;
+          x[1] = b1 * c + b2 * s;
+          x[2] = c1 * c + c2 * s;
+          x[3] = d1 * c + d2 * s;
+          return x;
+        };
+      }
+    };
+</script>
+
+<script type="text/javascript">
+    function displayPlayerInfo(pl){
+		$("#player_info").empty();
+		$("#player_info").append(pl.data.Name+"<br />");
+		$("#player_info").append("(" + pl.data.Organization.Name+")<br />");
+		$("#player_info").append("X: " + pl.data.MapObject.point.Lat);
+		$("#player_info").append("  |   Y: " + pl.data.MapObject.point.Long+"<br />");
+	}
+
+    var p = new Player();
+    p.refreshPlayer();
+    var mainGame = new mGame();
+    var chat = new Chat();
+    var map = new mapProto();
+
+    mainGame.LoadMain();
+    mainGame.getMapObjects(1);
+    chat.LoadChat(chat);
+</script>
+</body>
+</html>

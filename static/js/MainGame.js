@@ -14,16 +14,16 @@ mGame.prototype = {
 			data: JSON.stringify({"refresh_all": refresh_all}),
 			dataType: "json",
 			success: function (r) {
-				console.log(r);
+			    //console.log(r);
 				$("#event_log").empty();
 				map.draw_objects(r);
 				for(var obj_id in r) {
 				    if (r[obj_id].objType < 20) {
                         var s = '<li class="ufo" id="' + obj_id + '">'
                         s += r[obj_id].name + ' - ';
-                        s += r[obj_id].X + ' : ';
-                        s += r[obj_id].Y + ' - ';
-                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
+                        s += r[obj_id].point.Lat + ' : ';
+                        s += r[obj_id].point.Long + ' - ';
+//                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
                         s += ' miles away. ';
                         s += '- ' + enums.UfoStatuses[r[obj_id].status];
                         s += ' <span class="approach">&gt;&gt;</span>'
@@ -31,11 +31,12 @@ mGame.prototype = {
                         $("#event_log").append(s);
 					}
 				    if (r[obj_id].objType == 1000) {
+				        continue;
                         var s = '<li class="bunker" id="' + obj_id + '">'
                         s += r[obj_id].name + ' - ';
                         s += r[obj_id].X + ' : ';
                         s += r[obj_id].Y + ' - ';
-                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
+//                        s += (distance(p.data.MapObject.X, p.data.MapObject.Y, r[obj_id].X, r[obj_id].Y) / 1000).toFixed(3);
                         s += ' miles away. ';
                         s += ' <span class="approach">&gt;&gt;</span>'
                         s += '</li>';

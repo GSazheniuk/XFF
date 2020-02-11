@@ -18,7 +18,7 @@ class PlayerGetData(tornado.web.RequestHandler):
     def get(self):
         if self.sessionId in SharedData.OnlinePlayers:
             cp = SharedData.Players[SharedData.OnlinePlayers[self.sessionId]]
-            self.write(cp.toJSON().encode())
+            self.write(cp.toJSON().replace(",}", "}").replace(",]", "]"))
         else:
             self.write(b"{}")
         pass

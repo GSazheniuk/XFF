@@ -1,19 +1,15 @@
-import json
-import random
-
 import config
 import map
-import Skills
+from MongoCollections import Skills
 
-from BaseMapObject import BaseMapObject
+from BaseMapObject import BaseMapObject, BaseObject
 
 
-class Player:
+class Player(BaseObject):
     def __init__(self, name, last_name, organization, token, sector: map.MapSector):
         self.Name = '%s %s' % (name, last_name)
         self.MapObject = BaseMapObject(
-            random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
-            random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
+            map.Point(),
             5,
             config.MapObjectTypes.PLAYER,
             token,
@@ -33,6 +29,8 @@ class Player:
 
         self.Skills = Skills.default_skills()
         self.SkillsQueue = []
+        self.Crew = []
+        self.Wallet = 10000
 
         self.Aircraft = {
             "_id": 0,
@@ -88,16 +86,16 @@ class Player:
             pass
         pass
 
-    def toJSON(self):
-        res = '{'
-        res += '"Name": "%s"' % self.Name
-        res += ', "Token": "%s"' % self.Token
-        res += ', "Sector": "%s"' % self.CurrentSector.get_id()
-        res += ', "Attributes": %s' % json.dumps(self.Attributes)
-        res += ', "Organization": %s' % self.Organization.toJSON()
-        res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
-        res += ', "MapObject": %s' % json.dumps(self.MapObject.get_dict())
-        res += ', "Skills": ' + json.dumps([skill.__dict__ for skill in self.Skills])
-        res += ', "SkillsQueue": ' + json.dumps([skill.__dict__ for skill in self.SkillsQueue])
-        res += '}'
-        return res
+    # def toJSON(self):
+    #     res = '{'
+    #     res += '"Name": "%s"' % self.Name
+    #     res += ', "Token": "%s"' % self.Token
+    #     res += ', "Sector": "%s"' % self.CurrentSector.get_id()
+    #     res += ', "Attributes": %s' % json.dumps(self.Attributes)
+    #     res += ', "Organization": %s' % self.Organization.toJSON()
+    #     res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
+    #     res += ', "MapObject": %s' % self.MapObject.toJSON()
+    #     res += ', "Skills": ' + json.dumps([skill.__dict__ for skill in self.Skills])
+    #     res += ', "SkillsQueue": ' + json.dumps([skill.__dict__ for skill in self.SkillsQueue])
+    #     res += '}'
+    #     return res

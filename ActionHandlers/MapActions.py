@@ -1,4 +1,4 @@
-import HelperFunctions
+from Tools import HelperFunctions
 import config
 
 
@@ -24,9 +24,8 @@ def approach_to_object(**kwargs):
 
     dist = HelperFunctions.distance(pmo.X, pmo.Y, mo.X, mo.Y)
     print('Distance to object: ', dist)
-    k = aircraft["speed"] / dist
-    pmo.X += round((mo.X-pmo.X)*k)
-    pmo.Y += round((mo.Y-pmo.Y)*k)
+
+    pmo.point = HelperFunctions.next_point(pmo.point, mo.point, aircraft["speed"])
     if dist <= aircraft["speed"]:
         player.Status = config.PlayerStatuses.PLAYER_STATUS_MOVING
         return 1
@@ -44,7 +43,8 @@ def move_to_point(**kwargs):
         point = kwargs["point"]
 
     if point is None or obj is None:
-        print("move_to_point error: point or object is None!")
+        if config.DEBUG_LEVEL >= config.DebugLevels.DEBUG_LEVEL_ERRORS_ONLY:
+            print("move_to_point error: point or object is None!")
         return 0
 
     mo = obj.map_object
@@ -56,20 +56,21 @@ def move_to_point(**kwargs):
     if o["speed"] < o["max_speed"]:
         o["speed"] = HelperFunctions.minimum(o["speed"] + o["acceleration"], o["max_speed"])
 
-    dist = HelperFunctions.distance(mo.X, mo.Y, point["X"], point["Y"])
-    print('Distance to point: ', dist)
-    k = o["speed"] / dist
-    mo.X += round((point["X"]-mo.X)*k)
-    mo.Y += round((point["Y"]-mo.Y)*k)
-    obj.duration -= 1
+    dist = HelperFunctions.distance2(mo.point, point)
+    if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+        print('Distance to point: ', dist)
+    mo.point = HelperFunctions.next_point(mo.point, point, o["speed"])
+    # obj.duration -= 1
 
-    if dist <= o["speed"] or obj.duration == 0:
+    if dist <= o["speed"]:  # or obj.duration == 0:
+        obj.duration = 0
         # obj.Status = config.UfoStatuses.UFO_STATUS_MOVING
         # obj.map_object.status = config.UfoStatuses.UFO_STATUS_MOVING
         return 1
 
     obj.map_object.status = config.UfoStatuses.UFO_STATUS_MOVING
-    print(obj.id, ' moving for next ', obj.duration, ' ticks')
+    if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+        print(obj.id, ' moving for next ', obj.duration, ' ticks')
     return 0
 
 
@@ -90,7 +91,8 @@ def appear(**kwargs):
         return 1
 
     obj.map_object.status = config.UfoStatuses.UFO_STATUS_APPEARING
-    print(obj.id, ' appears in ', obj.duration, ' ticks')
+    if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+        print(obj.id, ' appears in ', obj.duration, ' ticks')
     return 0
 
 
@@ -101,7 +103,8 @@ def disappear(**kwargs):
         obj = kwargs["object"]
 
     if obj is None:
-        print('disappear error: object is None!')
+        if config.DEBUG_LEVEL >= config.DebugLevels.DEBUG_LEVEL_ERRORS_ONLY:
+            print('disappear error: object is None!')
         return 0
 
     obj.duration -= 1
@@ -111,5 +114,6 @@ def disappear(**kwargs):
         return -1
 
     obj.map_object.status = config.UfoStatuses.UFO_STATUS_LEAVING
-    print(obj.id, ' leaves in ', obj.duration, ' ticks')
+    if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+        print(obj.id, ' leaves in ', obj.duration, ' ticks')
     return 0

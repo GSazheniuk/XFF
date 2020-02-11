@@ -8,10 +8,15 @@ class MongoHelper:
         self._mClient = MongoClient(config.MONGO_CONNECTION_STRING)
         self._db = self._mClient['xcom']
         self.ufos = self._db.get_collection('UFOs')
+        self.sites = self._db.get_collection('Sites')
         pass
 
     def add_ufo(self, o):
         self.ufos.find_one_and_replace({'_id': o.get_id()}, o.__dict__, upsert=True)
+        pass
+
+    def add_site(self, o):
+        self.sites.find_one_and_replace({'_id': o.get_id()}, o.__dict__, upsert=True)
         pass
 
     def get_all_ufos(self):
@@ -37,7 +42,7 @@ class MongoHelper:
                 "duration": 25,
                 "max_instances_in_sector": 10,
                 "max_shields": 100,
-                "max_speed": 3000,
+                "max_speed": 10000,
                 "acceleration": 500,
                 "actions": {
                     "appear": {"probability": 0, "max_duration": 5, "status": 0},
@@ -47,3 +52,22 @@ class MongoHelper:
             })
             pass
         return ufos
+
+    def get__all_sites(self):
+        sites = []
+        try:
+            for s in self.sites.find():
+                sites.append(s)
+        except (errors.ServerSelectionTimeoutError, TimeoutError, errors.AutoReconnect) as err:
+            print(err)
+            sites.append({
+                    "_id": 0,
+                    "site_type": "Basic Sectoid Operation",
+                    "min_enemies": 3,
+                    "max_enemies": 5,
+                    "encounter_types": [
+                        "Sectoid"
+                    ],
+                    "probability": 25000
+            })
+        return sites

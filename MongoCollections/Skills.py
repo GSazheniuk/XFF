@@ -1,8 +1,9 @@
-import json
 import config
 
+from BaseMapObject import BaseObject
 
-class Skill:
+
+class Skill(BaseObject):
     def __init__(self, name, cost, reqs, skill_group, prim_attr, sec_attr, _id):
         self.Name = name
         self.Cost = cost
@@ -15,9 +16,6 @@ class Skill:
         self.Status = config.SkillStatuses.SKILL_AVAILABLE if len(reqs) == 0 else config.SkillStatuses.SKILL_UNAVAILABLE
         self._id = _id
         pass
-
-    def __str__(self):
-        return str(self.__dict__)
 
 
 def default_skills():

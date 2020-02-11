@@ -1,19 +1,22 @@
 import config
 import map
 import random
+import json
 
-from BaseMapObject import BaseMapObject
+from BaseMapObject import BaseMapObject, BaseObject
+from Assets.crew import Soldier
 
 
-class Bunker:
+class Bunker(BaseObject):
     def __init__(self, name, organization, sector: map.MapSector):
         self.ObjectName = name
-        self.Organization = organization
+        # self.Organization = organization
         self.CurrentSector = sector
+        self.avail_recruits = []
+        self.refresh_recruits()
 
         self.MapObject = BaseMapObject(
-            x=random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
-            y=random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
+            point=map.Point(),
             r=5,
             obj_type=config.MapObjectTypes.NPC_ORG_HQS,
             object_id=random.randint(0, config.EVENTS_MAX_ID),
@@ -24,3 +27,11 @@ class Bunker:
 
     def get_id(self):
         return self.MapObject.id
+
+    def refresh_recruits(self):
+        self.avail_recruits = []
+        for i in range(5):
+            s = Soldier()
+            s.id = random.randint(0, config.PLAYER_MAX_ID)
+            self.avail_recruits.append(s)
+        pass

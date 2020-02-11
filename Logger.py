@@ -45,4 +45,3 @@ class Logger:
         res = urlopen(request).read().decode()
         print(res)
         pass
-    

@@ -110,3 +110,11 @@ body { position:absolute; top:0; bottom:0; right:0; left:0; font-family: 'Orbitr
   color: #fff;
   cursor:pointer;
 }
+
+.recruit_block {
+    padding: 10px;
+}
+
+.recruit_inner_block {
+    border: solid thin silver;
+}

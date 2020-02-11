@@ -3,8 +3,10 @@ import config
 
 import Waiters
 
+from BaseMapObject import BaseObject
 
-class MapSector:
+
+class MapSector(BaseObject):
     def __init__(self, name, secstat, x, y):
         self._id = random.randint(1000000, 10000000)
         self.Name = name
@@ -17,7 +19,7 @@ class MapSector:
         pass
 
     def add_object(self, o):
-        self.objects[o.id] = o.get_dict()
+        self.objects[o.id] = o
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, o)
         pass
 
@@ -30,15 +32,28 @@ class MapSector:
     def get_objects_on_map(self):
         return self.objects
 
-    def get_random_point(self):
-        point = {
-            "X": random.randint(0, self.Width),
-            "Y": random.randint(0, self.Height),
-        }
-        return point
+    def get_objects_on_map_json(self):
+        res = '['
+        for k in self.objects:
+            res += self.objects[k].toJSON() + ','
+        res += ']'
+        return res.replace(",]", "]")
 
     def get_id(self):
         return self._id
+
+
+class Point(BaseObject):
+    def __init__(self, lat=None, long=None):
+        self.Lat = random.random() * 180 - 90
+        self.Long = random.random() * 360 - 180
+
+        if lat:
+            self.Lat = lat
+
+        if long:
+            self.Long = long
+        pass
 
 
 class Map:

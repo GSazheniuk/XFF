@@ -27,9 +27,9 @@ class MapGetObjects(tornado.web.RequestHandler):
         if self.request.connection.stream.closed():
             return
 
-        objects = player.CurrentSector.get_objects_on_map()
-        print(objects)
-        self.write(tornado.escape.json_encode(objects))
+        objects = player.CurrentSector.get_objects_on_map_json()
+        # self.write(tornado.escape.json_encode(objects))
+        self.write(objects.encode())
         pass
 
     def on_connection_close(self):
@@ -44,3 +44,24 @@ class ApproachObject(tornado.web.RequestHandler):
         # SharedData.add_map_action(player, object_id, config.MapActionTypes.ACTION_TYPE_APPROACH)
         self.write("{}")
         pass
+
+
+class ObjectById(tornado.web.RequestHandler):
+    def get(self, objectId, *args, **kwargs):
+        oId = int(objectId)
+        if oId in SharedData.Map.DefaultSector.objects:
+            self.set_status(200)
+            self.write(SharedData.Map.DefaultSector.objects[oId].toJSON())
+        else:
+            self.set_status(404)
+            print(SharedData.Map.DefaultSector.objects)
+            self.write("{}")
+        pass
+
+
+class MapAllObjects(tornado.web.RequestHandler):
+    def get(self, *args, **kwargs):
+        objects = SharedData.Map.DefaultSector.get_objects_on_map_json()
+        self.set_status(200)
+        self.write(objects)
+    pass

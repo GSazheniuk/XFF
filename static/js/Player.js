@@ -4,6 +4,7 @@ Player.prototype = {
     tokenId: null,
     Name: null,
     attributes: null,
+    Organization: null,
 	isLoaded: 0,
 
     constructor: function () {
@@ -23,6 +24,7 @@ Player.prototype = {
         plr.Name = player.Name;
         plr.tokenId = player.TokenID;
         plr.attributes = player.Attributes;
+        plr.Organization = player.Organization;
     },
 
     refreshPlayer: function () {
@@ -48,8 +50,8 @@ Player.prototype = {
                     // console.log('Player : ' + owner.leaderName + ' logged in successfully.');
                 // }
 
-                // if (typeof owner.refreshPlayerCallback === "function")
-                    // owner.refreshPlayerCallback();
+                 if (typeof owner.refreshPlayerCallback === "function")
+                     owner.refreshPlayerCallback();
             },
             error: function (message) {
                 console.error("error has occurred");
@@ -70,6 +72,26 @@ Player.prototype = {
             },
             error: function (message) {
                 console.error("addSkillToQueue error has occurred");
+                console.error(message);
+            }
+        })
+    },
+
+    recruitSoldier: function (ids){
+        recruit_id = ids.split(":")[0];
+        bunker_id = ids.split(":")[1];
+        console.log(ids);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "http://localhost:8081/bunker/recruitSoldier",
+            data: JSON.stringify({"recruit_id": parseInt(recruit_id), "bunker_id": parseInt(bunker_id)}),
+            dataType: "json",
+            success: function (r) {
+                recruitSoldier(recruit_id);
+            },
+            error: function (message) {
+                console.error("recruitSoldier error has occurred");
                 console.error(message);
             }
         })

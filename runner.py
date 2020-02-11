@@ -1,5 +1,9 @@
 from FrontServer import FrontWatchServer
 from BackServer import BackBoneServer
+import asyncio
+
+
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 if __name__ == '__main__':
     try:

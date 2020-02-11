@@ -22,6 +22,8 @@
             <span><a href="/player_view">Home</a></span>
             <span>|</span>
             <span><a href="/map_view">Map</a></span>
+            <span>|</span>
+            <span><a href="/base_view">Bunker</a></span>
         </div>
     </div>
     <div class="row" style="height: 75%">
@@ -88,12 +90,12 @@
 <span id="msgBodyTpl" class="poiret"></span>
 <script type="text/javascript">
     function displayPlayerInfo(pl){
+        $('#player_info').empty();
+        $("#player_info").append('<div class="well well-sm" id="player_name"></div>');
 		$("#player_name").empty();
 		$("#player_name").append(pl.data.Name+"<br />");
 		$("#player_name").append("(" + pl.data.Organization.Name+")");
 
-        $('#player_info').empty();
-        $("#player_info").append('<div class="well well-sm" id="player_name"></div>');
 		var attrs = pl.data.Attributes;
 		for (var pr in attrs){
 		    s = "<div class='col-sm-6'><span>"+pr+"</span>";

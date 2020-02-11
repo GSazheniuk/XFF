@@ -1,7 +1,3 @@
-import config
-import random
-import MapActions
-
 from Logger import Logger
 from Chat import Chat
 from map import Map
@@ -17,6 +13,7 @@ Map = Map(1, 1)
 Log = Logger('XFF', 'SharedData')
 frontServicesFree = 0
 AllMapActions = {}
+Queue_Skills = []
 
 
 def get_current_player(req):

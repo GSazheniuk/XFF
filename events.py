@@ -2,7 +2,8 @@ import config
 import random
 import BaseMapObject
 import map
-import MapActions
+from Tools import HelperFunctions
+from ActionHandlers import MapActions
 import SharedData
 
 
@@ -29,8 +30,7 @@ class FlyingUFO:
         self.id = random.randint(0, config.EVENTS_MAX_ID)
         self.data = o
         self.map_object = BaseMapObject.BaseMapObject(
-            random.randint(0, config.MAP_DEFAULT_SECTOR_WIDTH),
-            random.randint(0, config.MAP_DEFAULT_SECTOR_HEIGHT),
+            map.Point(),
             o['diameter'],
             o['_id'],
             self.id,
@@ -58,7 +58,15 @@ class FlyingUFO:
 
         if new_action == config.MapActionTypes.ACTION_TYPE_MOVE_TO_POINT:
             self.duration = self.data["actions"][new_action]["max_duration"]
-            self.action = Action(new_action, self, **{"point": self.sector.get_random_point()})
+            new_point = map.Point()
+            self.action = Action(new_action, self, **{"point": new_point})
+            if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+                print("Object #%s moving towards (%s, %s) - %s" % (
+                    self.id,
+                    new_point.Lat,
+                    new_point.Long,
+                    HelperFunctions.get_location_name(new_point)
+                ))
         elif new_action == config.MapActionTypes.ACTION_TYPE_LEAVE:
             self.duration = self.data["actions"][new_action]["max_duration"]
             self.action = Action(new_action, self, **{})
@@ -78,14 +86,17 @@ class FlyingUFO:
         # self.duration -= 1
         if self.action.action_type:
             self.map_action()
-        print("event id: %s duration %s" % (self.id, self.duration))
+        if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+            print("event id: %s duration %s" % (self.id, self.duration))
         pass
 
     def end(self):
-        print('end called for %s' % self.id)
+        if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+            print('end called for %s' % self.id)
         self.sector.remove_object(self.map_object)
         pass
 
     def __del__(self):
-        print(self.id, "-- event ended")
+        if config.DEBUG_LEVEL == config.DebugLevels.DEBUG_LEVEL_DETAILED:
+            print(self.id, "-- event ended")
         pass

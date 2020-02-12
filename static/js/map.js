@@ -22,6 +22,12 @@ mapProto.prototype = {
         this.path = d3.geoPath(this.projection);
         this.circle = d3.geoCircle();
 
+        this.zoom = d3.zoom()
+            .scaleExtent([0.5, 2])
+            //.scale(this.projection.scale())
+            //.translate([0,0])               // not linked directly to projection
+            .on("zoom", this.redraw);
+
         this.svg = d3.select("#map_holder").append("svg").attr("width", this.width).attr("height", this.height)
             .attr("viewBox", "0 0 700 700");
         var defs = this.svg.append("defs");
@@ -47,12 +53,12 @@ mapProto.prototype = {
         feMerge2.append("feMergeNode")
             .attr("in","SourceGraphic");
 
-        owner = this;
+        map = this;
         Promise.all([
             d3.json("/static/Data/countries-110m.json"),
             d3.json("/static/Data/places.json"),
         ]).then(function(files) {
-            owner.render(files[0], files[1]);
+            map.render(files[0], files[1]);
         });
     },
     render: function(world, places) {
@@ -124,32 +130,48 @@ mapProto.prototype = {
                 return 2;
         });
 
-        owner = this;
+        this.def_scale = this.projection.scale();
         this.loaded = true;
+        this.svg.call(this.zoom);
 
         d3.timer(function (t){
 //            moon.attr("d", path(circle.center([-t / 60, 0])()));
 //            if (t % 10000 < 1000){
-                owner.projection.rotate([-t / 600, 0, 0]);
-                owner.svg.selectAll("path").attr("d", owner.path);
-                owner.svg.selectAll(".ufo").attr("d", function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.R)());});
-                owner.svg.selectAll(".bunker-filter")
-                    .attr("transform", function(d) { return "translate(" + map.projection([d.point.Lat, d.point.Long]) + ")"; })
-                    .attr("d", function(d) {return d3.symbol().size(20).type(d3.symbolTriangle)();})
-                    .attr("opacity", function(d) {
-                        var geoangle = d3.geoDistance(
-                                    [d.point.Lat, d.point.Long],
-                                    [-map.projection.rotate()[0], map.projection.rotate()[1]]
-                                );
-                        if (geoangle > 1.57079632679490)
-                        {
-                            return "0";
-                        } else {
-                            return "1.0";
-                        }
-                    });
+                map.projection.rotate([-t / 600, 0, 0]);
+                map.redraw();
 //            }
         });
+    },
+    redraw: function(){
+        if (d3.event) {
+            var scale = d3.event.transform.k,
+                t = d3.event.translate;
+            map.projection.scale(map.def_scale*scale);
+//            console.log(d3.event);
+            map.slast = scale;
+            return;
+        }
+        map.svg.selectAll("path").attr("d", map.path);
+        map.svg.selectAll(".ufo").attr("d", map.draw_ufo);
+        map.svg.selectAll(".ufo-atk-zone").attr("d", map.draw_ufo_atk_zone);
+        map.svg.selectAll(".ufo-atk-range").attr("d", map.draw_ufo_atk_zone);
+        map.svg.selectAll(".bunker-filter")
+            .attr("transform", function(d) { return "translate(" + map.projection([d.point.Lat, d.point.Long]) + ")"; })
+            .attr("d", function(d) {return d3.symbol().size(20).type(d3.symbolTriangle)();})
+            .attr("opacity", function(d) {
+                var geoangle = d3.geoDistance(
+                            [d.point.Lat, d.point.Long],
+                            [-map.projection.rotate()[0], map.projection.rotate()[1]]
+                        );
+                if (geoangle > 1.57079632679490)
+                {
+                    return "0";
+                } else {
+                    return "1.0";
+                }
+            });
+        map.svg.selectAll(".bunker-scan-zone").attr("d", map.draw_ufo_atk_zone);
+        map.svg.selectAll(".bunker-scan-range").attr("d", map.draw_ufo_atk_zone);
     },
     drawGraticule: function() {
         const graticule = d3.geoGraticule()
@@ -176,14 +198,37 @@ mapProto.prototype = {
         if (!this.loaded)
             return;
 
+        this.draw_ufos(ufos);
+        this.draw_bunkers(bunkers);
+    },
+
+    draw_ufos: function(ufos){
         var circle = this.svg.selectAll(".ufo")
             .data(ufos, function(d) { return d.id; });
         circle.exit().remove();
         circle.enter()
           .append("path")
             .attr("class", "ufo")
-            .attr("d", function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.R)());});
+            .attr("d", map.draw_ufo);
 
+        var circle = this.svg.selectAll(".ufo-atk-zone")
+            .data(ufos, function(d) { return d.id; });
+        circle.exit().remove();
+        circle.enter()
+          .append("path")
+            .attr("class", "ufo-atk-zone")
+            .attr("d", map.draw_ufo_atk_zone);
+
+        var circle = this.svg.selectAll(".ufo-atk-range")
+            .data(ufos, function(d) { return d.id; });
+        circle.exit().remove();
+        circle.enter()
+          .append("path")
+            .attr("class", "ufo-atk-range")
+            .attr("d", map.draw_ufo_atk_zone);
+    },
+
+    draw_bunkers: function(bunkers){
         var tri = this.svg.selectAll(".bunker-filter")
             .data(bunkers, function(d) { return d.id; });
         tri.exit().remove();
@@ -191,7 +236,7 @@ mapProto.prototype = {
           .append("path")
             .attr("class", "bunker-filter")
             .attr("transform", function(d) { return "translate(" + map.projection([d.point.Lat, d.point.Long]) + ")"; })
-            .attr("d", function(d) {return d3.symbol().size(20).type(d3.symbolTriangle)();})
+            .attr("d", function(d) {return map.path(d3.symbol().size(20).type(d3.symbolTriangle)());})
             .attr("opacity", function(d) {
                 var geoangle = d3.geoDistance(
                             [d.point.Lat, d.point.Long],
@@ -204,10 +249,23 @@ mapProto.prototype = {
                     return "1.0";
                 }
             });
+        var tri = this.svg.selectAll(".bunker-scan-zone")
+            .data(bunkers, function(d) { return d.id; });
+        tri.exit().remove();
+        tri.enter()
+          .append("path")
+            .attr("class", "bunker-scan-zone")
+            .attr("d", map.draw_ufo_atk_zone);
 
+        var tri = this.svg.selectAll(".bunker-scan-range")
+            .data(bunkers, function(d) { return d.id; });
+        tri.exit().remove();
+        tri.enter()
+          .append("path")
+            .attr("class", "bunker-scan-range")
+            .attr("d", map.draw_ufo_atk_zone);
     },
 
-    draw_ufo: function(d){
-        return map.path()
-    },
+    draw_ufo: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(0.5)());},
+    draw_ufo_atk_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.R)());},
 }

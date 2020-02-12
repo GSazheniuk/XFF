@@ -88,6 +88,7 @@
     }
 
     function recruitSoldier(){
+        b.getData(p.data.Organization.Bases[0].MapObject.id);
     }
 
     function displayBunkerInfo(info){
@@ -106,11 +107,11 @@
                                 + "<div class='text-right'>"
                                 + "<a href='#' data='"
                                 + r[i].id + ":" +  p.data.Organization.Bases[0].MapObject.id
-                                + "' id='recruit_link'>recruit</a>"
+                                + "' class='recruit_link'>recruit</a>"
                                 + "</div></div>");
         }
 
-        $("#recruit_link").click(function(e){ alert(this); p.recruitSoldier($(this).attr('data'));event.preventDefault();});
+        $(".recruit_link").click(function(e){ p.recruitSoldier($(this).attr('data'));event.preventDefault();});
     }
 
     var p = new Player();

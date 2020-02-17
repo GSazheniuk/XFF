@@ -18,7 +18,7 @@ mGame.prototype = {
 				$("#event_log").empty();
 				map.draw_objects(r);
 				for(var obj_id in r) {
-				    if (r[obj_id].objType < 20) {
+				    if (r[obj_id].objType > 0) {
                         var s = '<li class="ufo" id="' + obj_id + '">'
                         s += r[obj_id].name + ' - ';
                         s += r[obj_id].point.Lat + ' : ';
@@ -30,7 +30,7 @@ mGame.prototype = {
                         s += '</li>';
                         $("#event_log").append(s);
 					}
-				    if (r[obj_id].objType == 1000) {
+				    if (r[obj_id].objType == 0) {
 				        continue;
                         var s = '<li class="bunker" id="' + obj_id + '">'
                         s += r[obj_id].name + ' - ';

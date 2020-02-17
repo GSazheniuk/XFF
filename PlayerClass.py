@@ -2,16 +2,15 @@ import config
 import map
 from MongoCollections import Skills
 
-from BaseMapObject import BaseMapObject, BaseObject
+from Geoscape.BaseObjects import BaseObject
+from Geoscape.MapObjects import GroundBaseMO
 
 
 class Player(BaseObject):
     def __init__(self, name, last_name, organization, token, sector: map.MapSector):
         self.Name = '%s %s' % (name, last_name)
-        self.MapObject = BaseMapObject(
+        self.MapObject = GroundBaseMO(
             map.Point(),
-            5,
-            config.MapObjectTypes.PLAYER,
             token,
             self.Name
         )
@@ -85,17 +84,3 @@ class Player(BaseObject):
                 skill.Status = config.SkillStatuses.SKILL_QUEUED
             pass
         pass
-
-    # def toJSON(self):
-    #     res = '{'
-    #     res += '"Name": "%s"' % self.Name
-    #     res += ', "Token": "%s"' % self.Token
-    #     res += ', "Sector": "%s"' % self.CurrentSector.get_id()
-    #     res += ', "Attributes": %s' % json.dumps(self.Attributes)
-    #     res += ', "Organization": %s' % self.Organization.toJSON()
-    #     res += ', "Aircraft": %s' % json.dumps(self.Aircraft)
-    #     res += ', "MapObject": %s' % self.MapObject.toJSON()
-    #     res += ', "Skills": ' + json.dumps([skill.__dict__ for skill in self.Skills])
-    #     res += ', "SkillsQueue": ' + json.dumps([skill.__dict__ for skill in self.SkillsQueue])
-    #     res += '}'
-    #     return res

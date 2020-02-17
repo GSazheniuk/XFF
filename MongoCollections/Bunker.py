@@ -1,9 +1,9 @@
 import config
 import map
 import random
-import json
 
-from BaseMapObject import BaseMapObject, BaseObject
+from Geoscape.BaseObjects import BaseObject
+from Geoscape.MapObjects import GroundBaseMO
 from Assets.crew import Soldier
 
 
@@ -15,10 +15,8 @@ class Bunker(BaseObject):
         self.avail_recruits = []
         self.refresh_recruits()
 
-        self.MapObject = BaseMapObject(
+        self.MapObject = GroundBaseMO(
             point=map.Point(),
-            r=5,
-            obj_type=config.MapObjectTypes.NPC_ORG_HQS,
             object_id=random.randint(0, config.EVENTS_MAX_ID),
             name=name
         )

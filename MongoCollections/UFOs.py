@@ -1,10 +1,12 @@
 import json
+from config import MapObjectTypes
 
 
 class Probe:
     def __init__(self):
         self._id = 0
-        self.ufo_type = 'Probe'
+        self.name = 'Probe'
+        self.obj_type = MapObjectTypes.AIRCRAFT
         self.probability = 125000
         self.duration = 50                      # Ticks
         self.max_instances_in_sector = 10
@@ -38,7 +40,8 @@ class Probe:
 class SmallScout:
     def __init__(self):
         self._id = 1
-        self.ufo_type = 'Small Scout'
+        self.name = 'Small Scout'
+        self.obj_type = MapObjectTypes.AIRCRAFT
         self.probability = 60000
         self.duration = 75                      # Ticks
         self.max_instances_in_sector = 10
@@ -76,7 +79,8 @@ class SmallScout:
 class MediumScout:
     def __init__(self):
         self._id = 2
-        self.ufo_type = 'Medium Scout'
+        self.name = 'Medium Scout'
+        self.obj_type = MapObjectTypes.AIRCRAFT
         self.probability = 45000
         self.duration = 125                     # Ticks
         self.max_instances_in_sector = 8
@@ -114,7 +118,8 @@ class MediumScout:
 class LargeScout:
     def __init__(self):
         self._id = 3
-        self.ufo_type = 'Large Scout'
+        self.name = 'Large Scout'
+        self.obj_type = MapObjectTypes.AIRCRAFT
         self.probability = 25000
         self.duration = 100                     # Ticks
         self.max_instances_in_sector = 6

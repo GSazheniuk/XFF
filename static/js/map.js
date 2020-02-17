@@ -187,10 +187,11 @@ mapProto.prototype = {
         ufos = [];
         bunkers = [];
         for (var o in objects){
-            if (objects[o].objType < 20){
+            if (objects[o].objType == 1){
                 ufos.push(objects[o]);
             }
-            if (objects[o].objType == 1000){
+            if (objects[o].objType == 0){
+                objects[o].R = 7;
                 bunkers.push(objects[o]);
             }
         }

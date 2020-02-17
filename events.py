@@ -1,6 +1,6 @@
 import config
 import random
-import BaseMapObject
+from Geoscape import BaseObjects, MapObjects
 import map
 from Tools import HelperFunctions
 from ActionHandlers import MapActions
@@ -29,13 +29,21 @@ class FlyingUFO:
     def __init__(self, o, ms: map.MapSector):
         self.id = random.randint(0, config.EVENTS_MAX_ID)
         self.data = o
-        self.map_object = BaseMapObject.BaseMapObject(
-            map.Point(),
-            o['diameter'],
-            o['_id'],
-            self.id,
-            o['ufo_type']
-        )
+        if o['obj_type'] == config.MapObjectTypes.AIRCRAFT:
+            self.map_object = MapObjects.AircraftMO(
+                map.Point(),
+                o['diameter'],
+                self.id,
+                o['name']
+            )
+
+        if o['obj_type'] == config.MapObjectTypes.COMBAT_SITE:
+            self.map_object = MapObjects.CombatSiteMO(
+                map.Point(),
+                self.id,
+                o['name']
+            )
+
         self.sector = ms
         ms.add_object(self.map_object)
         self.duration = self.get_action_duration_value(config.MapActionTypes.ACTION_TYPE_APPEAR)

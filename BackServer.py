@@ -68,6 +68,11 @@ class BackBoneServer:
             SharedData.AllFlyingObjects[ufo.id] = ufo
             pass
 
+        for u in available_sites:
+            site = events.FlyingUFO(u, SharedData.Map.DefaultSector)
+            SharedData.AllFlyingObjects[site.id] = site
+            pass
+
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
 
         for p in SharedData.Players:

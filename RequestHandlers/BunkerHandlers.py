@@ -2,6 +2,8 @@ import tornado.escape
 import tornado.web
 
 import SharedData
+from Model.Actions.BunkerEvents import RefreshRecruitsEvent
+from Model.BaseClasses.BaseAction import ActionStatus
 import Waiters
 
 from tornado import gen
@@ -28,6 +30,10 @@ class BunkerGetInfo(tornado.web.RequestHandler):
 
         bunker_id = tornado.escape.json_decode(self.request.body)["bunker_id"]
         b = SharedData.AllBases[bunker_id]
+        if not b.refresh_event or b.refresh_event.status == ActionStatus.FINISHED:
+            b.refresh_event = RefreshRecruitsEvent(b.clear_recruits)
+            SharedData.Loop.actions.append(b.refresh_event)
+            b.refresh_recruits()
 
         self.write(b.toJSON().encode())
         pass
@@ -45,8 +51,6 @@ class BunkerRecruitSoldier(tornado.web.RequestHandler):
 
         soldier_id = tornado.escape.json_decode(self.request.body)["recruit_id"]
         bunker_id = tornado.escape.json_decode(self.request.body)["bunker_id"]
-        print(SharedData.AllBases)
-        print(bunker_id, type(bunker_id))
         b = SharedData.AllBases[bunker_id]
         soldier = [soldier for soldier in b.avail_recruits if soldier.id == soldier_id]
 

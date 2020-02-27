@@ -6,6 +6,7 @@ WAIT_FOR_MAP_OBJECTS = 2
 WAIT_FOR_EVENT_LOG = 3
 WAIT_FOR_TEST = 4
 WAIT_FOR_TIMER = 5
+WAIT_FOR_BUNKER_EVENTS = 6
 
 
 class Waiters:
@@ -17,6 +18,7 @@ class Waiters:
             WAIT_FOR_EVENT_LOG: set(),
             WAIT_FOR_TEST: set(),
             WAIT_FOR_TIMER: set(),
+            WAIT_FOR_BUNKER_EVENTS: set(),
         }
         pass
 

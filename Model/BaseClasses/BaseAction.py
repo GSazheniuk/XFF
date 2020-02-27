@@ -1,10 +1,14 @@
 import abc
 
 class BaseAction(abc.ABC):
-    def __init__(self, interval):
+    def __init__(self, interval, ticks):
         self.timeout = 0
+        self.ticks = ticks
         self.interval = interval
         pass
+
+    def toJSON(self):
+        return self.timeout
 
     @abc.abstractmethod
     def start(self):
@@ -19,7 +23,7 @@ class BaseAction(abc.ABC):
         pass
 
 
-class GeoActionStatus:
+class ActionStatus:
     INACTIVE = 0
     ACTIVE = 1
     FINISHED = 2

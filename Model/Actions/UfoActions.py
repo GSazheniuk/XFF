@@ -1,35 +1,35 @@
 from Tools import HelperFunctions
-from Model.BaseClasses.BaseAction import BaseAction, GeoActionStatus
+from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
 
 import config
 
 
 class AppearAction(BaseAction):
     def __init__(self, **kwargs):
-        super().__init__(1)
+        super().__init__(1, -1)
         self.obj = kwargs["object"] if "object" in kwargs else None
         if self.obj is None:
             if config.DEBUG_LEVEL >= config.DebugLevels.DEBUG_LEVEL_ERRORS_ONLY:
                 print('appear error: object is None!')
-            self.status = GeoActionStatus.FINISHED
+            self.status = ActionStatus.FINISHED
             return
-        self.status = GeoActionStatus.INACTIVE
+        self.status = ActionStatus.INACTIVE
         self.obj.map_object.status = kwargs["action_status"] if "action_status" in kwargs else None
         pass
 
     def start(self):
-        if self.status == GeoActionStatus.INACTIVE:
-            self.status = GeoActionStatus.ACTIVE
+        if self.status == ActionStatus.INACTIVE:
+            self.status = ActionStatus.ACTIVE
         pass
 
     def tick(self):
-        if self.status != GeoActionStatus.ACTIVE:
+        if self.status != ActionStatus.ACTIVE:
             return
 
         self.obj.duration -= 1
 
         if self.obj.duration <= 0:
-            self.status = GeoActionStatus.FINISHED
+            self.status = ActionStatus.FINISHED
 
         pass
 
@@ -40,31 +40,31 @@ class AppearAction(BaseAction):
 
 class MoveAction(BaseAction):
     def __init__(self, **kwargs):
-        super().__init__(1)
+        super().__init__(1, -1)
         self.obj = kwargs["object"] if "object" in kwargs else None
         self.point = kwargs["point"] if "point" in kwargs else None
 
         if self.point is None or self.obj is None:
             if config.DEBUG_LEVEL >= config.DebugLevels.DEBUG_LEVEL_ERRORS_ONLY:
                 print("move_to_point error: point or object is None!")
-            self.status = GeoActionStatus.FINISHED
+            self.status = ActionStatus.FINISHED
             return
 
         self.o, self.mo = self.obj.data, self.obj.map_object
-        self.status = GeoActionStatus.INACTIVE
+        self.status = ActionStatus.INACTIVE
 
         if "speed" not in self.o:
             self.o["speed"] = 0
         pass
 
     def start(self):
-        if self.status == GeoActionStatus.INACTIVE:
-            self.status = GeoActionStatus.ACTIVE
+        if self.status == ActionStatus.INACTIVE:
+            self.status = ActionStatus.ACTIVE
         self.obj.map_object.status = config.UfoStatuses.UFO_STATUS_LEAVING
         pass
 
     def tick(self):
-        if self.status != GeoActionStatus.ACTIVE:
+        if self.status != ActionStatus.ACTIVE:
             return
 
         if self.o["speed"] < self.o["max_speed"]:
@@ -77,7 +77,7 @@ class MoveAction(BaseAction):
 
         if dist <= self.o["speed"]:
             self.obj.duration = 0
-            self.status = GeoActionStatus.FINISHED
+            self.status = ActionStatus.FINISHED
             return
 
         self.obj.map_object.status = config.UfoStatuses.UFO_STATUS_MOVING

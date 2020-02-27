@@ -13,7 +13,7 @@ class Bunker(BaseObject):
         # self.Organization = organization
         self.CurrentSector = sector
         self.avail_recruits = []
-        self.refresh_recruits()
+        self.refresh_event = None
 
         self.MapObject = GroundBaseMO(
             point=map.Point(),
@@ -32,4 +32,8 @@ class Bunker(BaseObject):
             s = Soldier()
             s.id = random.randint(0, config.PLAYER_MAX_ID)
             self.avail_recruits.append(s)
+        pass
+
+    def clear_recruits(self):
+        self.avail_recruits = []
         pass

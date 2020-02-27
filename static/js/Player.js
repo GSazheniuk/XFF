@@ -93,6 +93,7 @@ Player.prototype = {
             error: function (message) {
                 console.error("recruitSoldier error has occurred");
                 console.error(message);
+                recruitSoldier();
             }
         })
     },

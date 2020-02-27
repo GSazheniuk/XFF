@@ -1,5 +1,5 @@
 from datetime import datetime
-from Model.BaseClasses.BaseAction import GeoActionStatus
+from Model.BaseClasses.BaseAction import ActionStatus
 import tornado.gen as gen
 
 class GeoLoop:
@@ -23,15 +23,18 @@ class GeoLoop:
                     next_timeout = 5
             else:
                 for a in shooters:
-                    if a.status == GeoActionStatus.INACTIVE:
+                    if a.status == ActionStatus.INACTIVE:
+                        print(a, "Event STARTED!")
                         a.start()
 
-                    if a.status == GeoActionStatus.ACTIVE:
+                    if a.status == ActionStatus.ACTIVE and a.timeout == 0:
                         a.tick()
 
-                    if a.status == GeoActionStatus.FINISHED:
+                    if a.status == ActionStatus.FINISHED:
                         a.finish()
                         self.actions.remove(a)
+                        print(a, "Event FINISHED!")
+                        a = None
 
 
             yield next_timeout

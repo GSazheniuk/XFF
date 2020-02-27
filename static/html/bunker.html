@@ -92,7 +92,11 @@
     }
 
     function displayBunkerInfo(info){
-        console.log(info);
+        if (info.data == -1){
+            recruitSoldier();
+            return;
+        }
+
 		$("#recruits_info").empty();
 		$("#base_name").empty();
 		$("#base_name").append(info.data.ObjectName);

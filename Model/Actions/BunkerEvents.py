@@ -1,29 +1,35 @@
 from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
-import datetime as dt
 import Waiters
 
 
-class TimeAction(BaseAction):
-    def __init__(self):
-        super().__init__(1, -1)
-        self.current_time = dt.datetime(2047, 1, 1, 0, 0, 0)
+class RefreshRecruitsEvent(BaseAction):
+    def __init__(self, callback):
+        super().__init__(30, 1)
+        self.callback = callback
         self.status = ActionStatus.INACTIVE
         pass
 
     def start(self):
         if self.status == ActionStatus.INACTIVE:
             self.status = ActionStatus.ACTIVE
+            self.timeout = self.interval
         pass
 
     def tick(self):
         if self.status != ActionStatus.ACTIVE:
             return
 
-        self.current_time += dt.timedelta(seconds=5)
+        if self.ticks > 0:
+            self.ticks -= 1
+
+        if self.ticks == 0:
+            self.status = ActionStatus.FINISHED
+            return
+
         self.timeout = self.interval
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_TIMER, self.current_time)
+        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BUNKER_EVENTS, True)
         pass
 
     def finish(self):
-        self.status = ActionStatus.FINISHED
+        self.callback()
         pass

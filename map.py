@@ -3,7 +3,7 @@ import config
 
 import Waiters
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 
 
 class MapSector(BaseObject):

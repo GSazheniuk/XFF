@@ -1,7 +1,7 @@
-from MongoCollections.Bunker import Bunker
+from Model.MongoCollections.Bunker import Bunker
 import SharedData
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 
 
 class Organization(BaseObject):

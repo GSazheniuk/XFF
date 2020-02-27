@@ -2,7 +2,7 @@ import config
 import map
 import random
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 from Geoscape.MapObjects import GroundBaseMO
 from Assets.crew import Soldier
 

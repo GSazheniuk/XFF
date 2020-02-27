@@ -97,12 +97,15 @@
 <body style="background-color: black">
     <div class='container-fluid'>
         <div class="row">
-            <div class="col-sm-12 text-center">
+            <div class="col-sm-10 text-center">
                 <span><a href="/player_view">Home</a></span>
                 <span>|</span>
                 <span><a href="/map_view">Map</a></span>
                 <span>|</span>
                 <span><a href="/base_view">Bunker</a></span>
+            </div>
+            <div class="col-sm-2 text-center">
+                <span id="timer"></span>
             </div>
         </div>
         <div class="row">
@@ -196,6 +199,25 @@
     mainGame.LoadMain();
     mainGame.getMapObjects(1);
     chat.LoadChat(chat);
+
+    var lastLoaded = 0;
+
+    function listen2Queue() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/map/time", true);
+        xhr.onprogress = function (a) {
+            $("#timer").empty();
+            s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
+            $("#timer").append(s);
+            lastLoaded = a.loaded;
+        }
+        xhr.send();
+    }
+
+    $(document).ready(function(){
+        listen2Queue();
+    });
+
 </script>
 </body>
 </html>

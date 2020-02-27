@@ -4,12 +4,12 @@ import tornado.web
 import os.path
 from tornado import gen
 
-from RequestHandlers import ChatHandlers
-from RequestHandlers import MapHandlers
-from RequestHandlers import PlayerHandlers
-from RequestHandlers import BunkerHandlers
+from RequestHandlers import ChatHandlers, MapHandlers, PlayerHandlers, BunkerHandlers
+from Model.Actions.GeoTimeAction import TimeAction
 
 import Waiters
+import SharedData
+
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
@@ -59,6 +59,7 @@ class FrontWatchServer:
                     (r"/player/addSkill", PlayerHandlers.PlayerAddSkill2Queue),
                     # Map requests
                     (r"/map/getObjects", MapHandlers.MapGetObjects),
+                    (r"/map/time", MapHandlers.MapTimer),
                     (r"/map/objects/([0-9]+)", MapHandlers.ObjectById),
                     (r"/map/all-objects", MapHandlers.MapAllObjects),
                     (r"/map/approachObject", MapHandlers.ApproachObject),
@@ -88,5 +89,7 @@ class FrontWatchServer:
 
     def run(self):
         self.app.listen(8081)
+        SharedData.Loop.actions.append(TimeAction())
+        tornado.ioloop.IOLoop.current().add_callback(SharedData.Loop.start_loop)
         tornado.ioloop.IOLoop.current().start()
         pass

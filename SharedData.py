@@ -1,6 +1,7 @@
 from Logger import Logger
 from Chat import Chat
 from map import Map
+from Geoscape.GeoLoop import GeoLoop
 
 
 OnlinePlayers = {}
@@ -14,6 +15,7 @@ Log = Logger('XFF', 'SharedData')
 frontServicesFree = 0
 AllMapActions = {}
 Queue_Skills = []
+Loop = GeoLoop()
 
 
 def get_current_player(req):

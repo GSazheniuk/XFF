@@ -1,6 +1,6 @@
 import random
 from Assets.weapons import Rifle
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 
 
 max_attr_value = 10

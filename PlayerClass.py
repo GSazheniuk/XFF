@@ -1,8 +1,8 @@
 import config
 import map
-from MongoCollections import Skills
+from Model.MongoCollections import Skills
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 from Geoscape.MapObjects import GroundBaseMO
 
 

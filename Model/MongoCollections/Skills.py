@@ -1,6 +1,6 @@
 import config
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 
 
 class Skill(BaseObject):

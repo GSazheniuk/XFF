@@ -1,6 +1,6 @@
 import config
 import random
-from Geoscape import BaseObjects, MapObjects
+from Geoscape import MapObjects
 import map
 from Tools import HelperFunctions
 from ActionHandlers import MapActions

@@ -1,4 +1,4 @@
-from Geoscape.BaseObjects import BaseMapObject
+from Model.BaseClasses.BaseObjects import BaseMapObject
 from config import MapObjectTypes
 
 

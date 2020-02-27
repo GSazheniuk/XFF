@@ -1,6 +1,6 @@
 import random
 
-from Geoscape.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject
 
 
 class Shot(BaseObject):

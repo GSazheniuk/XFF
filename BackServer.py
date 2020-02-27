@@ -2,7 +2,7 @@ import random
 import requests
 
 import SharedData
-from MongoCollections import UFOs, GroundSite
+from Model.MongoCollections import UFOs, GroundSite
 import config
 import events
 import Waiters

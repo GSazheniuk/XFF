@@ -1,6 +1,7 @@
 from FrontServer import FrontWatchServer
 from BackServer import BackBoneServer
 import asyncio
+import SharedData
 
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

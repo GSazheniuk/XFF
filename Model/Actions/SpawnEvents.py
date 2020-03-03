@@ -1,11 +1,14 @@
 from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
+from Model.GeoSites.CombatSite import CombatSite
 import Waiters
+import SharedData
+import random
+import config
 
 
-class DeSpawnSiteEvent(BaseAction):
-    def __init__(self, callback):
-        super().__init__(20, 5)
-        self.callback = callback
+class SpawnSiteEvent(BaseAction):
+    def __init__(self):
+        super().__init__(20, -1)
         self.status = ActionStatus.INACTIVE
         pass
 
@@ -19,10 +22,12 @@ class DeSpawnSiteEvent(BaseAction):
         if self.status != ActionStatus.ACTIVE:
             return
 
-        if self.ticks:
-            self.ticks -= 1
-        else:
-            self.status = ActionStatus.FINISHED
+        probability = random.randint(0, config.EVENTS_MAX_PROBABILITY)
+        sites = [e for e in SharedData.all_sites if e['probability'] > probability]
+        for u in sites:
+            site = CombatSite(u, SharedData.Map.DefaultSector)
+            SharedData.AllFlyingObjects[site.id] = site
+            pass
 
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
 
@@ -30,5 +35,4 @@ class DeSpawnSiteEvent(BaseAction):
         pass
 
     def finish(self):
-        self.callback()
         pass

@@ -5,7 +5,7 @@ import os.path
 from tornado import gen
 
 from RequestHandlers import ChatHandlers, MapHandlers, PlayerHandlers, BunkerHandlers
-from Model.Actions import GeoTimeAction, CombatSiteEvents
+from Model.Actions import GeoTimeAction, SpawnEvents
 
 import Waiters
 import SharedData
@@ -90,7 +90,7 @@ class FrontWatchServer:
     def run(self):
         self.app.listen(8081)
         SharedData.Loop.actions.append(GeoTimeAction.TimeAction())
-        SharedData.Loop.actions.append(CombatSiteEvents.SpawnSiteEvent())
+        SharedData.Loop.actions.append(SpawnEvents.SpawnSiteEvent())
         tornado.ioloop.IOLoop.current().add_callback(SharedData.Loop.start_loop)
         tornado.ioloop.IOLoop.current().start()
         pass

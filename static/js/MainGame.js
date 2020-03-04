@@ -19,7 +19,7 @@ mGame.prototype = {
 				map.draw_objects(r);
 				for(var obj_id in r) {
 				    if (r[obj_id].objType > 0) {
-                        var s = '<li class="ufo" id="' + obj_id + '">'
+                        var s = '<li class="ufo" id="' + r[obj_id].id + '">'
                         s += r[obj_id].name + ' - ';
                         s += r[obj_id].point.Lat + ' : ';
                         s += r[obj_id].point.Long + ' - ';
@@ -32,7 +32,7 @@ mGame.prototype = {
 					}
 				    if (r[obj_id].objType == 0) {
 				        continue;
-                        var s = '<li class="bunker" id="' + obj_id + '">'
+                        var s = '<li class="bunker" id="' + r[obj_id].id + '">'
                         s += r[obj_id].name + ' - ';
                         s += r[obj_id].X + ' : ';
                         s += r[obj_id].Y + ' - ';
@@ -47,11 +47,12 @@ mGame.prototype = {
                     $.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
-                        url: "http://localhost:8081/map/approachObject",
-                        data: JSON.stringify({"object_id": $(this.parentElement).attr("id")}),
+                        url: "/attack_site",
+                        data: JSON.stringify({"site_id": $(this.parentElement).attr("id")}),
                         dataType: "json",
             			success: function (r) {
-            			    console.log("approachObject result: ", r)
+            			    console.log("attack result: ", r)
+            			    location.href = "/attack_site"
                         },
                         error: function (message) {
                             console.error("approachObject error has occurred");

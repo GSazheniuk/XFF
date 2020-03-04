@@ -29,8 +29,7 @@ class Bunker(BaseObject):
     def refresh_recruits(self):
         self.avail_recruits = []
         for i in range(5):
-            s = Soldier()
-            s.id = random.randint(0, config.PLAYER_MAX_ID)
+            s = Soldier("Rookie {}".format(random.randint(0, 100)))
             self.avail_recruits.append(s)
         pass
 

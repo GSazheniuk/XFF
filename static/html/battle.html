@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+    <link rel="stylesheet" href="themes/slate.min.css" />
+    <link rel="stylesheet" href="themes/main.css" />
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+<div class="fluid-container">
+    <div class="row">
+        <div class="col-sm-2" id="team_one">
+            <div class="player text-center" id="id123456">
+                <div class="portrait">
+                    <img src="images/1w.png" />
+                </div>
+                <div class="name">Captain Marvel</div>
+                <div class="health">Health: 20/20</div>
+                <div class="timeunits">TU: 15/15</div>
+                <div class="target">Target: Rookie Sectoid</div>
+            </div>
+        </div>
+        <div class="col-sm-8" id="battlefield">
+            <div id="log"></div>
+        </div>
+        <div class="col-sm-2" id="team_two">
+            <div class="player text-center" id="id654321">
+                <div class="portrait">
+                    <img src="images/1s.png" />
+                </div>
+                <div class="name">Rookie Sectoid</div>
+                <div class="health">Health: 20/20</div>
+                <div class="timeunits">TU: 15/15</div>
+                <div class="target">Target: Captain Marvel</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+class LogMessage extends React.Component {
+  render() {
+    return React.createElement('div', null, `${this.props.msg}`);
+  }
+}
+
+var lastLoaded = 0;
+
+function listen2Queue() {
+    $("#log").empty();
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/battle", true);
+    xhr.onprogress = function (a) {
+        s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
+        console.log(s);
+        $("#log").append(s+"<br />");
+        lastLoaded = a.loaded;
+    }
+    xhr.send();
+}
+
+$(document).ready(function(){
+    listen2Queue();
+});
+
+</script>
+</body>
+</html>

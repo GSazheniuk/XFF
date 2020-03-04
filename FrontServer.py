@@ -4,7 +4,7 @@ import tornado.web
 import os.path
 from tornado import gen
 
-from RequestHandlers import ChatHandlers, MapHandlers, PlayerHandlers, BunkerHandlers
+from RequestHandlers import ChatHandlers, MapHandlers, PlayerHandlers, BunkerHandlers, BattleHandlers
 from Model.Actions import GeoTimeAction, SpawnEvents
 
 import Waiters
@@ -66,6 +66,9 @@ class FrontWatchServer:
                     # Bunker requests
                     (r"/bunker/getData", BunkerHandlers.BunkerGetInfo),
                     (r"/bunker/recruitSoldier", BunkerHandlers.BunkerRecruitSoldier),
+                    # Battle requests
+                    (r"/attack_site", BattleHandlers.StartBattleHandler),
+                    (r"/battle", BattleHandlers.BattleHandler),
                     # Chat requests
                     (r"/chat/getPlayers", ChatHandlers.ChatGetPlayers),
                     (r"/chat/getMessages", ChatHandlers.ChatGetMessages),

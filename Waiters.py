@@ -7,6 +7,7 @@ WAIT_FOR_EVENT_LOG = 3
 WAIT_FOR_TEST = 4
 WAIT_FOR_TIMER = 5
 WAIT_FOR_BUNKER_EVENTS = 6
+WAIT_FOR_BATTLE_EVENTS = 7
 
 
 class Waiters:
@@ -19,6 +20,7 @@ class Waiters:
             WAIT_FOR_TEST: set(),
             WAIT_FOR_TIMER: set(),
             WAIT_FOR_BUNKER_EVENTS: set(),
+            WAIT_FOR_BATTLE_EVENTS: set(),
         }
         pass
 

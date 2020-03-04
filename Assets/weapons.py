@@ -4,20 +4,24 @@ from Model.BaseClasses.BaseObjects import BaseObject
 
 
 class Shot(BaseObject):
-    def __init__(self, name, cost, acc_mod, dmg_mod, rng_mod):
+    def __init__(self, name, cost, acc_mod, dmg_mod, rng_mod, speed):
         self.name = name
         self.cost = cost if cost > 0 else 1
         self.acc_mod = acc_mod
         self.dmg_mod = dmg_mod
         self.rng_mod = rng_mod
+        self.speed = speed
 
     def calc_shot_chance(self, wep_rng, tgt_rng, acc):
         return 0.95*min([1, (wep_rng+self.rng_mod + acc*self.acc_mod/3)/(tgt_rng*2 - wep_rng)])
 
+    def calc_shot_timeout(self, speed):
+        return self.speed / speed
+
 
 class SnapShot(Shot):
     def __init__(self, total_tus):
-        super().__init__("Snap shot", round(0.25*total_tus), 0.66, 1, 0)
+        super().__init__("Snap shot", round(0.25*total_tus), 0.66, 1, 0, 3)
         pass
 
 

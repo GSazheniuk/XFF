@@ -72,8 +72,9 @@ class MapTimer(tornado.web.RequestHandler):
         while not self.request.connection.stream.closed():
             self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_TIMER)
             ctime = yield self.future
-            self.write(ctime.strftime("%Y-%b-%d %H:%M:%S").encode())
-            self.flush()
+            if not self.request.connection.stream.closed():
+                self.write(ctime.strftime("%Y-%b-%d %H:%M:%S").encode())
+                self.flush()
         pass
 
     def on_connection_close(self):

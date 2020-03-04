@@ -26,7 +26,7 @@ class SpawnSiteEvent(BaseAction):
         sites = [e for e in SharedData.all_sites if e['probability'] > probability]
         for u in sites:
             site = CombatSite(u, SharedData.Map.DefaultSector)
-            SharedData.AllFlyingObjects[site.id] = site
+            SharedData.AllFlyingObjects[site.map_object.id] = site
             pass
 
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})

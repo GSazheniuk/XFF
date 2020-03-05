@@ -12,7 +12,7 @@ from tornado import gen
 class StartBattleHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def get(self):
-        self.render("html\\battle.html", messages=[])
+        self.render("html/battle.html", messages=[])
 
     def post(self):
         player = SharedData.get_current_player(self)

@@ -14,24 +14,24 @@ import SharedData
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
         if not self.get_cookie("sessionId"):
-            self.render("html\login.html")
+            self.render("html/login.html")
         else:
-            self.render("html\player_page.html", messages=[])
+            self.render("html/player_page.html", messages=[])
 
 
 class ViewPlayerHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("html\player_page.html", messages=[])
+        self.render("html/player_page.html", messages=[])
 
 
 class ViewMapHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("html\geoscape.html", messages=[])
+        self.render("html/geoscape.html", messages=[])
 
 
 class ViewBunkerHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("html\\bunker.html", messages=[])
+        self.render("html/bunker.html", messages=[])
 
 
 class ZKillTestHandler(tornado.web.RequestHandler):
@@ -77,10 +77,10 @@ class FrontWatchServer:
                     # test stuff
                     (r"/zkill", ZKillTestHandler),
                     # Static resources handlers
-                    (r"/themes/(.*)", tornado.web.StaticFileHandler, {"path": "static\\themes\\"}),
-                    (r"/data/(.*)", tornado.web.StaticFileHandler, {"path": "static\\Data\\"}),
-                    (r"/js/(.*)", tornado.web.StaticFileHandler, {'path': 'static\\js\\'}),
-                    (r"/images/(.*)", tornado.web.StaticFileHandler, {"path": "static\\images\\"}),
+                    (r"/themes/(.*)", tornado.web.StaticFileHandler, {"path": "static/themes/"}),
+                    (r"/data/(.*)", tornado.web.StaticFileHandler, {"path": "static/Data/"}),
+                    (r"/js/(.*)", tornado.web.StaticFileHandler, {'path': 'static/js/'}),
+                    (r"/images/(.*)", tornado.web.StaticFileHandler, {"path": "static/images/"}),
                     ],
                 cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
                 template_path=os.path.join(os.path.dirname(__file__), "static"),

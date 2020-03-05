@@ -36,7 +36,7 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
         if (self.sessionId is not None) and (self.sessionId in SharedData.OnlinePlayers):
             self.redirect("/")
         else:
-            self.render("html\login.html")
+            self.render("html/login.html")
         pass
 
     def post(self):

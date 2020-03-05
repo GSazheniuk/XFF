@@ -5,7 +5,7 @@ class BaseObject:
             if p == "Status":
                 print(self.__dict__ if not obj else obj.__dict__)
 
-            x = eval(f"self.{p}") if not obj else eval(f"obj.{p}")
+            x = eval("self.{}".format(p)) if not obj else eval("obj.{}".format(p))
             if not x and x != 0:
                 j = "null"
             elif type(x) is list:

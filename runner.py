@@ -1,10 +1,14 @@
 from FrontServer import FrontWatchServer
 from BackServer import BackBoneServer
-import asyncio
+
+try:
+    from asyncio import WindowsSelectorEventLoopPolicy, set_event_loop_policy
+    set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+except ImportError:
+    pass
+
 import SharedData
 
-if asyncio.WindowsSelectorEventLoopPolicy:
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 if __name__ == '__main__':
     try:

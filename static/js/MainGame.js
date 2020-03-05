@@ -10,7 +10,7 @@ mGame.prototype = {
 		$.ajax({
 			type: "POST",
             contentType: "application/json; charset=utf-8",
-			url: "http://localhost:8081/map/getObjects",
+			url: "/map/getObjects",
 			data: JSON.stringify({"refresh_all": refresh_all}),
 			dataType: "json",
 			success: function (r) {

@@ -20,7 +20,7 @@ Chat.prototype = {
 		$.ajax({
 			type: "POST",
             contentType: "application/json; charset=utf-8",
-			url: "http://localhost:8081/chat/getPlayers",
+			url: "/chat/getPlayers",
 			data: JSON.stringify({"channel": "local", "refresh_all": refresh_all}),
 			dataType: "json",
 			success: function (r) {
@@ -70,7 +70,7 @@ Chat.prototype = {
 		$.ajax({
 			type: "POST",
             contentType: "application/json; charset=utf-8",
-			url: "http://localhost:8081/chat/sendMessage",
+			url: "/chat/sendMessage",
 			data: JSON.stringify({"channel": "local", "message": message.trim()}),
 			dataType: "json",
 			success: function (r) {
@@ -96,7 +96,7 @@ Chat.prototype = {
 		$.ajax({
 			type: "POST",
             contentType: "application/json; charset=utf-8",
-			url: "http://localhost:8081/chat/getMessages",
+			url: "/chat/getMessages",
 			data: JSON.stringify({"channel": "local"}),
 			dataType: "json",
 			success: function (r) {
@@ -133,7 +133,7 @@ Chat.prototype = {
 		$.ajax({
 			type: "POST",
             contentType: "application/json; charset=utf-8",
-			url: "http://localhost:8081/chat/gotMessages",
+			url: "/chat/gotMessages",
 			data: {},
 			dataType: "json",
 			success: function (r) {

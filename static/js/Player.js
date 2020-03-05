@@ -32,7 +32,7 @@ Player.prototype = {
         $.ajax({
             type: "GET",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8081/player/getData",
+            url: "/player/getData",
             dataType: "json",
             success: function (r) {
                 console.log('player/getData - ', r);
@@ -64,7 +64,7 @@ Player.prototype = {
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8081/player/addSkill",
+            url: "/player/addSkill",
             data: JSON.stringify({"skill_name": skill}),
             dataType: "json",
             success: function (r) {
@@ -84,7 +84,7 @@ Player.prototype = {
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8081/bunker/recruitSoldier",
+            url: "/bunker/recruitSoldier",
             data: JSON.stringify({"recruit_id": parseInt(recruit_id), "bunker_id": parseInt(bunker_id)}),
             dataType: "json",
             success: function (r) {

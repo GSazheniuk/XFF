@@ -15,7 +15,7 @@ Bunker.prototype = {
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8081/bunker/getData",
+            url: "/bunker/getData",
             data: JSON.stringify({"bunker_id": bunker_id}),
             dataType: "json",
             success: function (r) {

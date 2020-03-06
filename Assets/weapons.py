@@ -13,7 +13,7 @@ class Shot(BaseObject):
         self.speed = speed
 
     def calc_shot_chance(self, wep_rng, tgt_rng, acc):
-        return 0.95*min([1, (wep_rng+self.rng_mod + acc*self.acc_mod/3)/(tgt_rng*2 - wep_rng)])
+        return 0.95*min([1, (wep_rng+self.rng_mod + acc*self.acc_mod/3)/(max([tgt_rng*2 - wep_rng, tgt_rng]))])
 
     def calc_shot_timeout(self, speed):
         return self.speed / speed

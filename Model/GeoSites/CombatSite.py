@@ -23,6 +23,7 @@ class CombatSite:
 
         self.sector = ms
         self.Crew = []
+        self.log = []
         ms.add_object(self.map_object)
         self.duration = 20
         self.spawn_event = DeSpawnSiteEvent(self.despawn)
@@ -36,6 +37,10 @@ class CombatSite:
             a.y = random.randint(0, 20)
 
         print("Battle for {} started.".format(self.id))
+        for i in range(3):
+            yield 1
+
+        rnd = 1
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BATTLE_EVENTS, "Battle for {} started.".format(self.id))
         while len([x for x in pl.Crew if x.health]) > 0 and len([y for y in self.Crew if y.health]) > 0:
             shooters = sorted([p for p in all_p
@@ -74,16 +79,11 @@ class CombatSite:
                                   , key=lambda k: k.calc_shot_chance(wep.range, dist, p.accuracy)
                                   , reverse=True)[0]
                     hit = wep.shoot(shot, dist, p.accuracy)
+                    print(rnd, p.id, e.id, e.health, hit)
                     if hit:
                         e.health -= min([hit, e.health])
-                        Waiters.all_waiters.deliver_to_waiter(
-                            Waiters.WAIT_FOR_BATTLE_EVENTS,
-                            " ".join([p.name, "shot", e.name, "for", str(hit), "damage!"
-                                         , e.name, "has", str(e.health), "left."]))
-                    else:
-                        Waiters.all_waiters.deliver_to_waiter(
-                            Waiters.WAIT_FOR_BATTLE_EVENTS,
-                            " ".join([p.name, " Missed!!!"]))
+
+                    self.log.append("|".join([str(rnd), str(p.id), str(e.id), str(hit), str(e.health)]))
                     p.time_units -= shot.cost
                     p.timeout = shot.calc_shot_timeout(p.speed)
 
@@ -93,6 +93,8 @@ class CombatSite:
 
             for p in all_p:
                 p.time_units += p.TUps * next_timeout
+
+            rnd += 1
             yield next_timeout
 
     def despawn(self):
@@ -105,9 +107,17 @@ class CombatSite:
     def start_battle(self, p: Player):
         self.Crew = [Sectoid("Enemy {}".format(i))
                       for i in range(random.randint(self.data["min_enemies"], self.data["max_enemies"]))]
+        i = 0
         for turn in self.battle_loop(p):
-            if turn != 1:
-                yield gen.sleep(turn)
+            # if turn != 1:
+            yield gen.sleep(turn)
+            if i != len(self.log):
+                Waiters.all_waiters.deliver_to_waiter(
+                    Waiters.WAIT_FOR_BATTLE_EVENTS,
+                    str(self.log[i:])
+                    )
+                i = len(self.log)
 
         Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BATTLE_EVENTS, "Done.")
+        self.spawn_event.ticks = 0
 

@@ -17,7 +17,7 @@ class Soldier(BaseObject):
         self.speed = sum([self.agility, self.reaction, self.reaction])/3
         self.perception = random.randint(1, max_attr_value)
         self.max_time_units = self.agility*2+self.stamina
-        self.TUps = self.max_time_units / 60 * self.speed / max_attr_value
+        self.TUps = max([1, int(self.max_time_units / 60 * self.speed / max_attr_value)])
         self.max_health = self.strength*2+self.stamina
         self.time_units = self.max_time_units
         self.health = self.max_health
@@ -42,7 +42,7 @@ class Sectoid(BaseObject):
         self.speed = sum([self.agility, self.reaction, self.reaction])/3
         self.perception = random.randint(1, max_attr_value)
         self.max_time_units = self.agility*2+self.stamina
-        self.TUps = self.max_time_units / 60 * self.speed / max_attr_value
+        self.TUps = max([1, int(self.max_time_units / 60 * self.speed / max_attr_value)])
         self.max_health = self.strength*2+self.stamina
         self.time_units = self.max_time_units
         self.health = self.max_health
@@ -50,6 +50,7 @@ class Sectoid(BaseObject):
         self.fov = self.perception
         self.x = None
         self.y = None
+        self.id = random.randint(0, config.PLAYER_MAX_ID)
         self.right_arm = Rifle(self.time_units)
         self.name = name
         pass

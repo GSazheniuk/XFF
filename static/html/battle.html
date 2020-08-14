@@ -11,34 +11,45 @@
     <script src="https://code.jquery.com/jquery-2.2.3.min.js" type="text/javascript"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<style>
+    .border_div {
+        background-color: #DDD,
+        padding: 1px
+    }
+</style>
 </head>
 <body>
 <div class="fluid-container">
     <div class="row">
         <div class="col-sm-2" id="team_one">
-            <div class="player text-center" id="id123456">
+            {% for p in player_team %}
+            <div class="player text-center" id="{{ p.id }}">
                 <div class="portrait">
                     <img src="images/1w.png" />
                 </div>
-                <div class="name">Captain Marvel</div>
-                <div class="health">Health: 20/20</div>
-                <div class="timeunits">TU: 15/15</div>
+                <div class="name">{{ escape(p.name) }}</div>
+                <div class="health">Health: <span class="hp">{{ p.health }}</span>/{{ p.max_health }}</div>
+                <div class="timeunits">TU: {{ p.time_units }}/{{ p.max_time_units }}</div>
                 <div class="target">Target: Rookie Sectoid</div>
             </div>
+            {% end %}
         </div>
         <div class="col-sm-8" id="battlefield">
             <div id="log"></div>
         </div>
         <div class="col-sm-2" id="team_two">
-            <div class="player text-center" id="id654321">
+            {% for e in enemy_team %}
+            <div class="player text-center" id="{{ e.id }}">
                 <div class="portrait">
                     <img src="images/1s.png" />
                 </div>
-                <div class="name">Rookie Sectoid</div>
-                <div class="health">Health: 20/20</div>
-                <div class="timeunits">TU: 15/15</div>
+                <div class="name">{{ escape(e.name) }}</div>
+                <div class="health">Health: <span class="hp">{{ e.health }}</span>/{{ e.max_health }}</div>
+                <div class="timeunits">TU: {{ e.time_units }}/{{ e.max_time_units }}</div>
                 <div class="target">Target: Captain Marvel</div>
             </div>
+            {% end %}
         </div>
     </div>
 </div>
@@ -57,8 +68,19 @@ function listen2Queue() {
     xhr.open("GET", "/battle", true);
     xhr.onprogress = function (a) {
         s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
+        s = s.replace(/'/g, '"').replace(/\[\]/g, '').replace(/\]\[/g, ']:[').split(':');
         console.log(s);
-        $("#log").append(s+"<br />");
+        s.forEach(function(c){
+            if (c[0] == "["){
+                a = JSON.parse(c);
+                a.forEach(function(d){
+                    b = d.split("|");
+                    $("#"+b[2]+" .health .hp").text(b[4]);
+                    $("#log").append(d+"<br />");
+                });
+            }
+            else $("#log").append(c+"<br />");
+        });
         lastLoaded = a.loaded;
     }
     xhr.send();

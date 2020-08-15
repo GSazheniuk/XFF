@@ -95,19 +95,31 @@
     </style>
 </head>
 <body style="background-color: black">
-    <div class='container-fluid'>
-        <div class="row">
-            <div class="col-sm-10 text-center">
-                <span><a href="/player_view">Home</a></span>
-                <span>|</span>
-                <span><a href="/map_view">Map</a></span>
-                <span>|</span>
-                <span><a href="/base_view">Bunker</a></span>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-right">
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <div style="height:25%">&nbsp;</div>
+            <div>
+                <a href="/player_view">Profile</a>
             </div>
-            <div class="col-sm-2 text-center">
-                <span id="timer"></span>
+            <hr />
+            <div>
+                <a href="/base_view">Base</a>
+            </div>
+            <hr />
+            <div>
+                <a href="/base_view">Operations(<span id="opsnum">0</span>)</a>
+            </div>
+            <hr />
+            <div>
+                <a href="/squad_view">Finances</a>
             </div>
         </div>
+        <div class="worldtime">
+            <div class="date"></div>
+            <div class="time"></div>
+        </div>
+    </nav>
+    <div class='container-fluid'>
         <div class="row">
             <div class="col-sm-12 text-center">
                 <div class="col-sm-8 text-center" id="map_holder"></div>
@@ -116,7 +128,7 @@
                         <div class="col-sm-12 text-center" id="player_info"></div>
                     </div>
                     <div class="row">
-                        <div class="col-12 text-left poiret" id="event_log"></div>
+                        <div class="col-12 text-right poiret" id="event_log"></div>
                     </div>
                 </div>
             </div>
@@ -206,9 +218,11 @@
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/map/time", true);
         xhr.onprogress = function (a) {
-            $("#timer").empty();
+            $(".worldtime .date").empty();
+            $(".worldtime .time").empty();
             s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
-            $("#timer").append(s);
+            $(".worldtime .date").append(s.split(' ')[0]);
+            $(".worldtime .time").append(s.split(' ')[1]);
             lastLoaded = a.loaded;
         }
         xhr.send();

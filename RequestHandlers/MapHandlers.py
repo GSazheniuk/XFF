@@ -69,14 +69,17 @@ class MapAllObjects(tornado.web.RequestHandler):
 class MapTimer(tornado.web.RequestHandler):
     @gen.coroutine
     def get(self):
-        while not self.request.connection.stream.closed():
-            self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_TIMER)
-            ctime = yield self.future
-            if not self.request.connection.stream.closed():
-                self.write(ctime.strftime("%Y-%b-%d %H:%M:%S").encode())
-                self.flush()
+        ctime = SharedData.Loop.actions[0].current_time
+        self.write(ctime.strftime("%Y-%b-%d %H:%M:%S").encode())
+        return
+#        while not self.request.connection.stream.closed():
+#            self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_TIMER)
+#            ctime = yield self.future
+#            if not self.request.connection.stream.closed():
+#                self.write(ctime.strftime("%Y-%b-%d %H:%M:%S").encode())
+#                self.flush()
         pass
 
     def on_connection_close(self):
-        Waiters.all_waiters.cancel_waiter(Waiters.WAIT_FOR_TIMER, self.future)
+#        Waiters.all_waiters.cancel_waiter(Waiters.WAIT_FOR_TIMER, self.future)
         pass

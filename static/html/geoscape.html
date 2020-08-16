@@ -212,7 +212,8 @@
     mainGame.getMapObjects(1);
     chat.LoadChat(chat);
 
-    var lastLoaded = 0;
+    var lastLoaded = 0,
+        lastTime = "";
 
     function listen2Queue() {
         var xhr = new XMLHttpRequest();
@@ -228,8 +229,31 @@
         xhr.send();
     }
 
+    function updateTime(){
+        lastTime.setSeconds(lastTime.getSeconds()+5);
+        $(".worldtime .date").empty();
+        $(".worldtime .time").empty();
+        s = lastTime.toUTCString().split(' ');
+        $(".worldtime .date").append(s[1]+' '+s[2]+', '+s[3]);
+        $(".worldtime .time").append(s[4]);
+    }
+
     $(document).ready(function(){
-        listen2Queue();
+        // listen2Queue();
+		$.ajax({
+			type: "GET",
+            contentType: "application/json; charset=utf-8",
+			url: "/map/time",
+			success: function (r) {
+			    console.log(r);
+			    lastTime = new Date(r+" GMT");
+			    window.setInterval(updateTime, 1000);
+			},
+			error: function (message) {
+				console.error("error has occured");
+				console.error(message);
+			}
+		})
     });
 
 </script>

@@ -4,7 +4,7 @@ from Geoscape import MapObjects
 import map
 from Tools import HelperFunctions
 from ActionHandlers import MapActions
-import SharedData
+from SharedData import SharedData
 
 
 class Action:
@@ -86,7 +86,7 @@ class FlyingUFO:
             self.next_action()
         elif action_result == -1:
             self.end()
-            del SharedData.AllFlyingObjects[self.id]
+            SharedData().remove_ufo(self.id)
             pass
         pass
 

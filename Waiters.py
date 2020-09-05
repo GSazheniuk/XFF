@@ -1,45 +1,40 @@
 from tornado.concurrent import Future
-
-WAIT_FOR_CHAT_PLAYERS = 0
-WAIT_FOR_CHAT_MESSAGES = 1
-WAIT_FOR_MAP_OBJECTS = 2
-WAIT_FOR_EVENT_LOG = 3
-WAIT_FOR_TEST = 4
-WAIT_FOR_TIMER = 5
-WAIT_FOR_BUNKER_EVENTS = 6
-WAIT_FOR_BATTLE_EVENTS = 7
+from Model.BaseClasses.Singleton import Singleton
 
 
-class Waiters:
+class AWaiters(metaclass=Singleton):
+    WAIT_FOR_CHAT_PLAYERS = 0
+    WAIT_FOR_CHAT_MESSAGES = 1
+    WAIT_FOR_MAP_OBJECTS = 2
+    WAIT_FOR_EVENT_LOG = 3
+    WAIT_FOR_TEST = 4
+    WAIT_FOR_TIMER = 5
+    WAIT_FOR_BUNKER_EVENTS = 6
+    WAIT_FOR_BATTLE_EVENTS = 7
+
     def __init__(self):
-        self._all_waiters = {
-            WAIT_FOR_CHAT_PLAYERS: set(),
-            WAIT_FOR_CHAT_MESSAGES: set(),
-            WAIT_FOR_MAP_OBJECTS: set(),
-            WAIT_FOR_EVENT_LOG: set(),
-            WAIT_FOR_TEST: set(),
-            WAIT_FOR_TIMER: set(),
-            WAIT_FOR_BUNKER_EVENTS: set(),
-            WAIT_FOR_BATTLE_EVENTS: set(),
+        self.waiters = {
+            AWaiters.WAIT_FOR_CHAT_PLAYERS: set(),
+            AWaiters.WAIT_FOR_CHAT_MESSAGES: set(),
+            AWaiters.WAIT_FOR_MAP_OBJECTS: set(),
+            AWaiters.WAIT_FOR_EVENT_LOG: set(),
+            AWaiters.WAIT_FOR_TEST: set(),
+            AWaiters.WAIT_FOR_TIMER: set(),
+            AWaiters.WAIT_FOR_BUNKER_EVENTS: set(),
+            AWaiters.WAIT_FOR_BATTLE_EVENTS: set(),
         }
-        pass
 
-    def subscribe_waiter(self, waiter_type):
-        result_future = Future()
-        self._all_waiters[waiter_type].add(result_future)
-        return result_future
+    def subscribe(self, waiter_type):
+        f = Future()
+        self.waiters[waiter_type].add(f)
+        return f
 
-    def deliver_to_waiter(self, waiter_type, o):
-        for future in self._all_waiters[waiter_type]:
-            future.set_result(o)
-            pass
-        self._all_waiters[waiter_type] = set()
-        pass
+    def deliver(self, waiter_type, o):
+        w = self.waiters[waiter_type].copy()
+        self.waiters[waiter_type].clear()
+        for f in w:
+            f.set_result(str(o))
 
-    def cancel_waiter(self, waiter_type, future):
-        self._all_waiters[waiter_type].remove(future)
+    def cancel(self, waiter_type, future):
+        self.waiters[waiter_type].remove(future)
         future.set_result({})
-        pass
-
-
-all_waiters = Waiters()

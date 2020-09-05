@@ -2,11 +2,12 @@ from datetime import datetime
 from Model.BaseClasses.BaseAction import ActionStatus
 import tornado.gen as gen
 
+
 class GeoLoop:
     def __init__(self):
         self.actions = []
         self.last_updated = datetime.now()
-        pass # def
+        pass
 
     def loop(self):
         while True:
@@ -36,9 +37,8 @@ class GeoLoop:
                         print(a, "Event FINISHED!")
                         a = None
 
-
             yield next_timeout
-        pass # def
+        pass  # def
 
     @gen.coroutine
     def start_loop(self):
@@ -46,4 +46,4 @@ class GeoLoop:
         for period in self.loop():
             yield gen.sleep(period)
         print("Loop finished.")
-        pass # def
+        pass

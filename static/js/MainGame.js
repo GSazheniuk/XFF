@@ -17,8 +17,10 @@ mGame.prototype = {
 			    //console.log(r);
 				$("#event_log").empty();
 				map.draw_objects(r);
+				total_ops = 0;
 				for(var obj_id in r) {
 				    if (r[obj_id].objType > 0) {
+				        total_ops++;
                         var s = '<li class="ufo" id="' + r[obj_id].id + '">'
                         s += r[obj_id].name + ' - ';
                         s += r[obj_id].point.Lat + ' : ';
@@ -43,6 +45,7 @@ mGame.prototype = {
                         $("#event_log").append(s);
 					}
 				}
+				$("#opsnum").text(total_ops);
                 $(".ufo .approach").click(function(e){
                     $.ajax({
                         type: "POST",

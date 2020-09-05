@@ -38,4 +38,4 @@ class BaseMapObject(BaseObject):
         pass
 
     def __str__(self):
-        return self.__dict__
+        return str(self.__dict__)

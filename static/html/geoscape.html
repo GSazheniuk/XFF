@@ -210,7 +210,7 @@
 
     mainGame.LoadMain();
     mainGame.getMapObjects(1);
-    chat.LoadChat(chat);
+    // chat.LoadChat(chat);
 
     var lastLoaded = 0,
         lastTime = "";
@@ -222,8 +222,10 @@
             $(".worldtime .date").empty();
             $(".worldtime .time").empty();
             s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
-            $(".worldtime .date").append(s.split(' ')[0]);
-            $(".worldtime .time").append(s.split(' ')[1]);
+            lastTime = new Date(s+" GMT");
+            s = lastTime.toUTCString().split(' ');
+            $(".worldtime .date").append(s[1]+' '+s[2]+', '+s[3]);
+            $(".worldtime .time").append(s[4]);
             lastLoaded = a.loaded;
         }
         xhr.send();
@@ -239,7 +241,8 @@
     }
 
     $(document).ready(function(){
-        // listen2Queue();
+        listen2Queue();
+        return;
 		$.ajax({
 			type: "GET",
             contentType: "application/json; charset=utf-8",

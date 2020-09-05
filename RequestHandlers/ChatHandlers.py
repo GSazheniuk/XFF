@@ -1,60 +1,54 @@
 import tornado.escape
 import tornado.web
 
-import Waiters
-import SharedData
-
 from tornado import gen
+from SharedData import SharedData
+from Waiters import AWaiters
+from Model.BaseClasses.BaseRequest import BaseRequestHandler, StreamingRequestHandler
 
 
-class ChatGetPlayers(tornado.web.RequestHandler):
+class ChatGetPlayers(StreamingRequestHandler):
     @gen.coroutine
     def post(self):
         print(self.request.body)
         channel = tornado.escape.json_decode(self.request.body)["channel"]
         refresh_all = tornado.escape.json_decode(self.request.body)["refresh_all"]
         if refresh_all != 1:
-            self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS)
+            self.future = AWaiters().subscribe(AWaiters.WAIT_FOR_CHAT_PLAYERS)
             yield self.future
-            if self.request.connection.stream.closed():
+            if not self.alive:
                 return
-            pass
 
-        players = SharedData.Chat.Channels2Players[channel]
+        players = SharedData().get_players_on_channel(channel)
         res = '{ "players" : ['
-        for TokenId in players:
-            player = SharedData.Players[TokenId]
+        for token_id in players:
+            player = SharedData().get_player_by_token(token_id)
             res += ',{"name": "%s"}' % player.Name
             pass
         res += "]}"
         self.write(res.replace("[,", "["))
         pass
 
-    def on_connection_close(self):
-        Waiters.all_waiters.cancel_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS, self.future)
-        pass
 
-
-class ChatSendMessage(tornado.web.RequestHandler):
+class ChatSendMessage(BaseRequestHandler):
     def post(self):
         print(self.request.body)
         post_data = tornado.escape.json_decode(self.request.body)
         channel = post_data["channel"]
         message = post_data["message"]
-        player = SharedData.get_current_player(self)
-        r = SharedData.Chat.send_message(player, channel, message)
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_CHAT_MESSAGES, r)
+        r = SharedData().send_message(self.current_user, channel, message)
+        AWaiters().deliver(AWaiters.WAIT_FOR_CHAT_MESSAGES, r)
         self.write("{}")
         pass
 
 
-class ChatGetMessages(tornado.web.RequestHandler):
+class ChatGetMessages(StreamingRequestHandler):
     @gen.coroutine
     def post(self):
-        self.future = Waiters.all_waiters.subscribe_waiter(Waiters.WAIT_FOR_CHAT_MESSAGES)
+        self.future = AWaiters().subscribe(AWaiters.WAIT_FOR_CHAT_MESSAGES)
         msgs = yield self.future
 
-        if self.request.connection.stream.closed():
+        if not self.alive:
             return
 
         print(msgs)
@@ -75,12 +69,8 @@ class ChatGetMessages(tornado.web.RequestHandler):
         self.write(res)
         pass
 
-    def on_connection_close(self):
-        Waiters.all_waiters.cancel_waiter(Waiters.WAIT_FOR_CHAT_MESSAGES, self.future)
-        pass
 
-
-class ChatGotMessages(tornado.web.RequestHandler):
+class ChatGotMessages(BaseRequestHandler):
     def post(self):
         # player = SharedData.get_current_player(self)
         self.write("{}")

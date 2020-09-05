@@ -1,12 +1,12 @@
 import random
 import requests
 
-import SharedData
 import config
 import events
 import Waiters
 
 from RTimer import RepeatedTimer
+from SharedData import SharedData
 
 
 def pull_api():

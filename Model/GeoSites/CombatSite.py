@@ -1,14 +1,15 @@
 import config
 import random
+import map
+import tornado.gen as gen
+import math
+
 from Geoscape import MapObjects
 from Model.Actions.CombatSiteEvents import DeSpawnSiteEvent
-import map
 from PlayerClass import Player
-from Assets.crew import  Sectoid
-import SharedData
-import tornado.gen as gen
-import Waiters
-import math
+from Assets.crew import Sectoid
+from Waiters import AWaiters
+from SharedData import SharedData
 
 
 class CombatSite:
@@ -27,7 +28,7 @@ class CombatSite:
         ms.add_object(self.map_object)
         self.duration = 20
         self.spawn_event = DeSpawnSiteEvent(self.despawn)
-        SharedData.Loop.actions.append(self.spawn_event)
+        SharedData().add_action(self.spawn_event)
         pass
 
     def battle_loop(self, pl: Player):
@@ -41,7 +42,7 @@ class CombatSite:
             yield 1
 
         rnd = 1
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BATTLE_EVENTS, "Battle for {} started.".format(self.id))
+        AWaiters().deliver(AWaiters.WAIT_FOR_BATTLE_EVENTS, "Battle for {} started.".format(self.id))
         while len([x for x in pl.Crew if x.health]) > 0 and len([y for y in self.Crew if y.health]) > 0:
             shooters = sorted([p for p in all_p
                                if
@@ -100,24 +101,24 @@ class CombatSite:
     def despawn(self):
         self.spawn_event = None
         self.sector.remove_object(self.map_object)
-        del SharedData.AllFlyingObjects[self.id]
+        SharedData().remove_ufo(self.id)
+        # del SharedData.AllFlyingObjects[self.id]
         pass
 
     @gen.coroutine
     def start_battle(self, p: Player):
         self.Crew = [Sectoid("Enemy {}".format(i))
-                      for i in range(random.randint(self.data["min_enemies"], self.data["max_enemies"]))]
+                     for i in range(random.randint(self.data["min_enemies"], self.data["max_enemies"]))]
         i = 0
         for turn in self.battle_loop(p):
             # if turn != 1:
             yield gen.sleep(turn)
             if i != len(self.log):
-                Waiters.all_waiters.deliver_to_waiter(
-                    Waiters.WAIT_FOR_BATTLE_EVENTS,
+                AWaiters().deliver(
+                    AWaiters.WAIT_FOR_BATTLE_EVENTS,
                     str(self.log[i:])
-                    )
+                )
                 i = len(self.log)
 
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BATTLE_EVENTS, "Done.")
+        AWaiters().deliver(AWaiters.WAIT_FOR_BATTLE_EVENTS, "Done.")
         self.spawn_event.ticks = 0
-

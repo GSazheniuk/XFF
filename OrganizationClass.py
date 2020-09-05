@@ -1,5 +1,5 @@
 from Model.MongoCollections.Bunker import Bunker
-import SharedData
+from SharedData import SharedData
 
 from Model.BaseClasses.BaseObjects import BaseObject
 
@@ -11,10 +11,10 @@ class Organization(BaseObject):
         hq = Bunker(
             name="%s Headquarters" % self.Name,
             organization=self,
-            sector=SharedData.Map.DefaultSector
+            sector=SharedData().get_default_sector()
         )
         self.Bases.append(hq)
-        SharedData.AllBases[hq.get_id()] = hq
+        SharedData().add_base(hq)
         pass
 
     def toJSON2(self):

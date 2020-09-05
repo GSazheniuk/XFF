@@ -1,5 +1,5 @@
 from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
-import Waiters
+from Waiters import AWaiters
 
 
 class RefreshRecruitsEvent(BaseAction):
@@ -27,7 +27,7 @@ class RefreshRecruitsEvent(BaseAction):
             return
 
         self.timeout = self.interval
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_BUNKER_EVENTS, True)
+        AWaiters().deliver(AWaiters.WAIT_FOR_BUNKER_EVENTS, True)
         pass
 
     def finish(self):

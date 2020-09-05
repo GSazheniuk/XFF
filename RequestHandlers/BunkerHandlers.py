@@ -1,68 +1,46 @@
 import tornado.escape
 import tornado.web
 
-import SharedData
+from SharedData import SharedData
 from Model.Actions.BunkerEvents import RefreshRecruitsEvent
 from Model.BaseClasses.BaseAction import ActionStatus
-import Waiters
+from Model.BaseClasses.BaseRequest import BaseRequestHandler, StreamingRequestHandler
 
 from tornado import gen
 
 
-class BunkerGetRecruits(tornado.web.RequestHandler):
-    @gen.coroutine
+class BunkerGetRecruits(BaseRequestHandler):
     def get(self):
-        player = SharedData.get_current_player(self)
-
-        self.write(player.Organization.Bases[0].toJSON().encode())
-        pass
-
-    def on_connection_close(self):
+        self.write(self.current_user.Organization.Bases[0].toJSON().encode())
         pass
 
 
-class BunkerGetInfo(tornado.web.RequestHandler):
-    @gen.coroutine
+class BunkerGetInfo(BaseRequestHandler):
     def post(self):
-        player = SharedData.get_current_player(self)
-        if not player:
-            pass
-
         bunker_id = tornado.escape.json_decode(self.request.body)["bunker_id"]
-        b = SharedData.AllBases[bunker_id]
+        b = SharedData().get_base(bunker_id)
         if not b.refresh_event or b.refresh_event.status == ActionStatus.FINISHED:
             b.refresh_event = RefreshRecruitsEvent(b.clear_recruits)
-            SharedData.Loop.actions.append(b.refresh_event)
+            SharedData().add_action(b.refresh_event)
             b.refresh_recruits()
 
         self.write(b.toJSON().encode())
         pass
 
-    def on_connection_close(self):
-        pass
 
-
-class BunkerRecruitSoldier(tornado.web.RequestHandler):
-    @gen.coroutine
+class BunkerRecruitSoldier(BaseRequestHandler):
     def post(self):
-        player = SharedData.get_current_player(self)
-        if not player:
-            pass
-
         soldier_id = tornado.escape.json_decode(self.request.body)["recruit_id"]
         bunker_id = tornado.escape.json_decode(self.request.body)["bunker_id"]
-        b = SharedData.AllBases[bunker_id]
+        b = SharedData().get_base(bunker_id)
         soldier = [soldier for soldier in b.avail_recruits if soldier.id == soldier_id]
 
         if soldier:
             b.avail_recruits.remove(soldier[0])
-            player.Crew.append(soldier[0])
+            self.current_user.Crew.append(soldier[0])
             self.set_status(200)
         else:
             self.set_status(404)
 
-        self.write(player.toJSON().encode())
-        pass
-
-    def on_connection_close(self):
+        self.write(self.current_user.toJSON().encode())
         pass

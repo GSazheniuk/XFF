@@ -1,5 +1,6 @@
 import abc
 
+
 class BaseAction(abc.ABC):
     def __init__(self, interval, ticks):
         self.timeout = 0

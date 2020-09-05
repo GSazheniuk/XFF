@@ -1,5 +1,5 @@
 from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
-import Waiters
+from Waiters import AWaiters
 
 
 class DeSpawnSiteEvent(BaseAction):
@@ -24,7 +24,7 @@ class DeSpawnSiteEvent(BaseAction):
         else:
             self.status = ActionStatus.FINISHED
 
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
+        AWaiters().deliver(AWaiters.WAIT_FOR_MAP_OBJECTS, {})
 
         self.timeout = self.interval
         pass

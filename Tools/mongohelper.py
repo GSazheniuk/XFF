@@ -53,7 +53,7 @@ class MongoHelper:
             pass
         return ufos
 
-    def get__all_sites(self):
+    def get_all_sites(self):
         sites = []
         try:
             for s in self.sites.find():

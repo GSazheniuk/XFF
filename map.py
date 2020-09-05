@@ -1,7 +1,7 @@
 import random
 import config
 
-import Waiters
+from Waiters import AWaiters
 
 from Model.BaseClasses.BaseObjects import BaseObject
 
@@ -20,13 +20,13 @@ class MapSector(BaseObject):
 
     def add_object(self, o):
         self.objects[o.id] = o
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, o)
+        AWaiters().deliver(AWaiters.WAIT_FOR_MAP_OBJECTS, o)
         pass
 
     def remove_object(self, o):
         self.objects[o.id] = None
         del self.objects[o.id]
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_MAP_OBJECTS, {})
+        AWaiters().deliver(AWaiters.WAIT_FOR_MAP_OBJECTS, {})
         pass
 
     def get_objects_on_map(self):

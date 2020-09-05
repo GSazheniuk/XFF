@@ -1,6 +1,6 @@
 from Model.BaseClasses.BaseAction import BaseAction, ActionStatus
 import datetime as dt
-import Waiters
+from Waiters import AWaiters
 
 
 class TimeAction(BaseAction):
@@ -21,7 +21,7 @@ class TimeAction(BaseAction):
 
         self.current_time += dt.timedelta(seconds=5)
         self.timeout = self.interval
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_TIMER, self.current_time)
+        AWaiters().deliver(AWaiters.WAIT_FOR_TIMER, self.current_time.strftime("%Y-%b-%d %H:%M:%S"))
         pass
 
     def finish(self):

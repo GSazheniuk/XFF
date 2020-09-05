@@ -2,38 +2,28 @@ import tornado.web
 import tornado.escape
 import random
 
-import Waiters
 import config
-import SharedData
+from SharedData import SharedData
 
 from NPCOrganizationsHelper import NPCOrganizations
 from PlayerClass import Player
+from Waiters import AWaiters
+from Model.BaseClasses.BaseRequest import BaseRequestHandler, StreamingRequestHandler
 
 
-class PlayerGetData(tornado.web.RequestHandler):
-    def initialize(self):
-        self.sessionId = self.get_cookie("sessionId")
-        pass
-
+class PlayerGetData(BaseRequestHandler):
     def get(self):
-        if self.sessionId in SharedData.OnlinePlayers:
-            cp = SharedData.Players[SharedData.OnlinePlayers[self.sessionId]]
+        cp = SharedData().get_online_player(self.session_id)
+        if cp:
             self.write(cp.toJSON().replace(",}", "}").replace(",]", "]"))
         else:
             self.write(b"{}")
         pass
 
 
-class PlayerLoginPlayer(tornado.web.RequestHandler):
-    def initialize(self):
-        self.sessionId = self.get_cookie("sessionId")
-        if self.sessionId is None:
-            self.sessionId = str(random.randint(config.PLAYER_MIN_ID, config.PLAYER_MAX_ID))
-            self.set_cookie("sessionId", self.sessionId)
-        pass
-
+class PlayerLoginPlayer(BaseRequestHandler):
     def get(self):
-        if (self.sessionId is not None) and (self.sessionId in SharedData.OnlinePlayers):
+        if SharedData().is_online(self.session_id):
             self.redirect("/")
         else:
             self.render("html/login.html")
@@ -46,14 +36,11 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
             , "Merle"
             , npc_org.get_random_org()
             , random.randint(1000000, 10000000)
-            , SharedData.Map.DefaultSector
+            , SharedData().get_default_sector()
         )
 
-        SharedData.OnlinePlayers[self.sessionId] = player.Token
-        SharedData.Players[player.Token] = player
-
-        SharedData.Chat.subscribe_player_to_channel(player, "local")
-        Waiters.all_waiters.deliver_to_waiter(Waiters.WAIT_FOR_CHAT_PLAYERS, player)
+        SharedData().add_online_player(self.session_id, player)
+        AWaiters().deliver(AWaiters.WAIT_FOR_CHAT_PLAYERS, player)
 
         player.CurrentSector.add_object(player.MapObject)
 
@@ -63,14 +50,9 @@ class PlayerLoginPlayer(tornado.web.RequestHandler):
 
 class PlayerAddSkill2Queue(tornado.web.RequestHandler):
     def post(self):
-        session_id = self.get_cookie("sessionId")
         post_data = tornado.escape.json_decode(self.request.body)
         skill_name = post_data["skill_name"]
 
-        if session_id in SharedData.OnlinePlayers:
-            cp = SharedData.Players[SharedData.OnlinePlayers[session_id]]
-            cp.add_skill_to_queue(skill_name)
-            pass
-
+        self.current_user.add_skill_to_queue(skill_name)
         self.write(b"{}")
         pass

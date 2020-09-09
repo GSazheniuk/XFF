@@ -5,7 +5,7 @@ from pymongo import MongoClient, errors
 
 class MongoHelper:
     def __init__(self):
-        self._mClient = MongoClient(config.MONGO_CONNECTION_STRING)
+        self._mClient = MongoClient(config.ATLAS_CONNECTION_STRING)
         self._db = self._mClient['xcom']
         self.ufos = self._db.get_collection('UFOs')
         self.sites = self._db.get_collection('Sites')

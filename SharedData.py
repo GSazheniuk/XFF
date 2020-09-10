@@ -117,3 +117,6 @@ class SharedData(metaclass=Singleton):
         for u in sites:
             site = site_constructor(u, SharedData().get_default_sector())
             self._all_ufos[site.map_object.id] = site
+
+    def save_organization(self, o):
+        self._mongo_helper.save_organization(o)

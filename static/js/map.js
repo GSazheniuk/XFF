@@ -187,6 +187,7 @@ mapProto.prototype = {
         ufos = [];
         bunkers = [];
         for (var o in objects){
+            console.log(o);
             if (objects[o].objType == 1){
                 ufos.push(objects[o]);
             }

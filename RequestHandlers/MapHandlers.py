@@ -21,7 +21,7 @@ class MapGetObjects(StreamingRequestHandler):
             return
 
         objects = self.current_user.CurrentSector.get_objects_on_map_json()
-        self.write(objects.encode())
+        self.write(objects)
         pass
 
 
@@ -38,7 +38,7 @@ class ObjectById(BaseRequestHandler):
         map_obj = SharedData().get_map_object_by_id(int(objectId))
         if map_obj:
             self.set_status(200)
-            self.write(map_obj.toJSON())
+            self.write(map_obj.dict())
         else:
             self.set_status(404)
             self.write("{}")

@@ -11,7 +11,7 @@ from tornado import gen
 
 class BunkerGetRecruits(BaseRequestHandler):
     def get(self):
-        self.write(self.current_user.Organization.Bases[0].toJSON().encode())
+        self.write(self.current_user.Organization.Bases[0].dict())
         pass
 
 
@@ -24,7 +24,7 @@ class BunkerGetInfo(BaseRequestHandler):
             SharedData().add_action(b.refresh_event)
             b.refresh_recruits()
 
-        self.write(b.toJSON().encode())
+        self.write(b.dict())
         pass
 
 
@@ -42,5 +42,5 @@ class BunkerRecruitSoldier(BaseRequestHandler):
         else:
             self.set_status(404)
 
-        self.write(self.current_user.toJSON().encode())
+        self.write(self.current_user.dict())
         pass

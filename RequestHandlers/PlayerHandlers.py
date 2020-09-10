@@ -15,7 +15,8 @@ class PlayerGetData(BaseRequestHandler):
     def get(self):
         cp = SharedData().get_online_player(self.session_id)
         if cp:
-            self.write(cp.toJSON().replace(",}", "}").replace(",]", "]"))
+            # self.write(cp.toJSON().replace(",}", "}").replace(",]", "]"))
+            self.write(cp.dict())
         else:
             self.write(b"{}")
         pass
@@ -38,7 +39,6 @@ class PlayerLoginPlayer(BaseRequestHandler):
             , random.randint(1000000, 10000000)
             , SharedData().get_default_sector()
         )
-
         SharedData().add_online_player(self.session_id, player)
         AWaiters().deliver(AWaiters.WAIT_FOR_CHAT_PLAYERS, player)
 

@@ -1,31 +1,22 @@
-from Model.MongoCollections.Bunker import Bunker
-from SharedData import SharedData
-
+import uuid
 from Model.BaseClasses.BaseObjects import BaseObject
+from SharedData import SharedData
 
 
 class Organization(BaseObject):
-    def __init__(self, name):
+    def __init__(self):
+        self.id = uuid.uuid4().hex
+        self.Name = ""
+        self.Bio = ""
+        self._leader_id = 0
+        self.NPC = False
+
+    def new(self, name, descr, leader_id, is_npc):
+        self.id = uuid.uuid4().hex
         self.Name = name
-        self.Bases = list()
-        hq = Bunker(
-            name="%s Headquarters" % self.Name,
-            organization=self,
-            sector=SharedData().get_default_sector()
-        )
-        self.Bases.append(hq)
-        SharedData().add_base(hq)
-        pass
+        self.Bio = descr
+        self._leader_id = leader_id
+        self.NPC = is_npc
 
-    def toJSON2(self):
-        res = '{'
-        res += '"Name": "%s"' % self.Name
-        res += '"Bases": "%s"' % [x.toJSON() for x in self.Bases]
-        res += '}'
-        return res
-
-    def to_simple_JSON(self):
-        res = '{'
-        res += '"Name": "%s"' % self.Name
-        res += '}'
-        return res
+    def save(self):
+        SharedData().save_organization(o=self)

@@ -4,7 +4,7 @@ from config import MapObjectTypes
 
 class GroundBaseMO(BaseMapObject):
     def __init__(self, point, object_id, name):
-        super(GroundBaseMO, self).__init__(point, 1, MapObjectTypes.BASE, object_id, name)
+        super().__init__(point, 1, MapObjectTypes.BASE, object_id, name)
         pass
 
 

@@ -16,9 +16,11 @@ mGame.prototype = {
 			success: function (r) {
 			    //console.log(r);
 				$("#event_log").empty();
+				r = r.objects;
 				map.draw_objects(r);
 				total_ops = 0;
 				for(var obj_id in r) {
+				    console.log(obj_id);
 				    if (r[obj_id].objType > 0) {
 				        total_ops++;
                         var s = '<li class="ufo" id="' + r[obj_id].id + '">'

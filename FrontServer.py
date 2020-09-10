@@ -11,6 +11,7 @@ from Model.BaseClasses.BaseRequest import BaseRequestHandler, StreamingRequestHa
 
 from Waiters import AWaiters
 from SharedData import SharedData
+import config
 
 
 class RootHandler(BaseRequestHandler):
@@ -90,7 +91,7 @@ class FrontWatchServer:
         pass
 
     def run(self):
-        self.app.listen(8081)
+        self.app.listen(config.FRONTSERVER_PORT)
         SharedData().add_action(GeoTimeAction.TimeAction())
         SharedData().add_action(SpawnEvents.SpawnSiteEvent())
         tornado.ioloop.IOLoop.current().add_callback(SharedData().start_loop)

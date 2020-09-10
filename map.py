@@ -33,11 +33,15 @@ class MapSector(BaseObject):
         return self.objects
 
     def get_objects_on_map_json(self):
-        res = '['
-        for k in self.objects:
-            res += self.objects[k].toJSON() + ','
-        res += ']'
-        return res.replace(",]", "]")
+        res = {
+            "objects": [self.objects[x].dict() for x in self.objects]
+        }
+        # res = '['
+        # for k in self.objects:
+        #     res += str(self.objects[k].dict()) + ','
+        # res += ']'
+        # return res.replace(",]", "]")
+        return res
 
     def get_id(self):
         return self._id

@@ -10,6 +10,7 @@ class MongoHelper:
         self.ufos = self._db.get_collection('UFOs')
         self.sites = self._db.get_collection('Sites')
         self.organizations = self._db.get_collection('Organizations')
+        self.NPCs = self._db.get_collection('NPCs')
         pass
 
     def add_ufo(self, o):
@@ -76,3 +77,6 @@ class MongoHelper:
     def save_organization(self, o):
         self.organizations.find_one_and_replace({'_id': o.get_id()}, o.__dict__, upsert=True)
         pass
+
+    def save_npc_character(self, npc):
+        self.NPCs.find_one_and_replace({'_id': npc.id}, npc.dict(), upsert=True)

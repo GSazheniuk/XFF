@@ -120,3 +120,6 @@ class SharedData(metaclass=Singleton):
 
     def save_organization(self, o):
         self._mongo_helper.save_organization(o)
+
+    def save_npc_character(self, npc):
+        self._mongo_helper.save_npc_character(npc)

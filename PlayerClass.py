@@ -1,9 +1,28 @@
 import config
 import map
-from Model.MongoCollections import Skills
+import uuid
 
+from Model.MongoCollections import Skills
 from Model.BaseClasses.BaseObjects import BaseObject
 from Geoscape.MapObjects import GroundBaseMO
+from SharedData import SharedData
+
+
+class NPCCharacter(BaseObject):
+    def __init__(self):
+        self.id = uuid.uuid4().hex
+        self.is_NPC = True
+        self.name = ""
+        self.bio = ""
+        self.portrait = ""
+
+    def new(self, name, bio, portrait):
+        self.name = name
+        self.bio = bio
+        self.portrait = portrait
+
+    def save(self):
+        SharedData().save_npc_character(npc=self)
 
 
 class Player(BaseObject):
@@ -31,23 +50,23 @@ class Player(BaseObject):
         self.Crew = []
         self.Wallet = 10000
 
-        self.Aircraft = {
-            "_id": 0,
-            "diameter": 3,
-            "ship_type": "Interceptor",
-            "max_structure": 200,
-            "max_armor": 200,
-            "max_shields": 200,
-            "max_speed": 250,
-            "acceleration": 15,
-            "structure": 200,
-            "armor": 200,
-            "shields": 200,
-            "speed": 750,
-            "min_damage": 10,
-            "max_damage": 15,
-            "accuracy": 100,
-        }
+        # self.Aircraft = {
+        #     "_id": 0,
+        #     "diameter": 3,
+        #     "ship_type": "Interceptor",
+        #     "max_structure": 200,
+        #     "max_armor": 200,
+        #     "max_shields": 200,
+        #     "max_speed": 250,
+        #     "acceleration": 15,
+        #     "structure": 200,
+        #     "armor": 200,
+        #     "shields": 200,
+        #     "speed": 750,
+        #     "min_damage": 10,
+        #     "max_damage": 15,
+        #     "accuracy": 100,
+        # }
         pass
 
     def skill_done(self, skill):

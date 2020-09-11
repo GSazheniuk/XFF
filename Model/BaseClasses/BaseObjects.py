@@ -1,7 +1,10 @@
 class BaseObject:
     def load_from_JSON(self, data=None):
         for p in data:
-            self.__setattr__(p, data[p])
+            if p == "_id":
+                self.__setattr__("id", data[p])
+            else:
+                self.__setattr__(p, data[p])
 
     def dict(self):
         res = {}
@@ -17,7 +20,7 @@ class BaseObject:
             elif issubclass(type(x), BaseObject):
                 res[p] = x.dict()
             else:
-                res[p] = x
+                res[p if p != 'id' else '_id'] = x
         return res
 
 

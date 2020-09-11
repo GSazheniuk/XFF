@@ -75,7 +75,7 @@ class MongoHelper:
         return sites
 
     def save_organization(self, o):
-        self.organizations.find_one_and_replace({'_id': o.get_id()}, o.__dict__, upsert=True)
+        self.organizations.find_one_and_replace({'_id': o.id}, o.dict(), upsert=True)
         pass
 
     def save_npc_character(self, npc):

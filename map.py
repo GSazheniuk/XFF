@@ -3,7 +3,7 @@ import config
 
 from Waiters import AWaiters
 
-from Model.BaseClasses.BaseObjects import BaseObject
+from Model.BaseClasses.BaseObjects import BaseObject, BaseMapObject
 
 
 class MapSector(BaseObject):
@@ -19,6 +19,12 @@ class MapSector(BaseObject):
         pass
 
     def add_object(self, o):
+        if not o:
+            return
+        if type(o) is dict:
+            mo = BaseMapObject(None, 0, 0, 0, "", 0, 0)
+            mo.load_from_JSON(o)
+            o = mo
         self.objects[o.id] = o
         AWaiters().deliver(AWaiters.WAIT_FOR_MAP_OBJECTS, o)
         pass

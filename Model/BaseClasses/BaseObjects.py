@@ -25,13 +25,15 @@ class BaseObject:
 
 
 class BaseMapObject(BaseObject):
-    def __init__(self, point, r, obj_type, object_id, name):
+    def __init__(self, point, r, obj_type, object_id, name, scan_rng, atk_rng):
         self.point = point
         self.R = r
         self.objType = obj_type
         self.id = object_id
         self.status = 0
         self.name = name
+        self.scan_rng = scan_rng
+        self.atk_rng = atk_rng
         pass
 
     def __del__(self):

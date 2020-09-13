@@ -23,20 +23,24 @@ class SharedData(metaclass=Singleton):
         self._log = Logger('XFF', 'SharedData')
         self._map_actions = {}
         self._skill_queues = []
-        self._loop = GeoLoop()
 
-        self._mongo_helper = mongohelper.MongoHelper()
+        self._loop = GeoLoop()
+        self.organizations = {}
+        self.NPCs = {}
+        self.havens = {}
+
+        self.mongo_helper = mongohelper.MongoHelper()
         # Populate UFOs collection with default objects
         if config.BACKSERVER_POPULATE_MONGO:
-            self._mongo_helper.add_ufo(UFOs.Probe())
-            self._mongo_helper.add_ufo(UFOs.SmallScout())
-            self._mongo_helper.add_ufo(UFOs.MediumScout())
-            self._mongo_helper.add_ufo(UFOs.LargeScout())
-            self._mongo_helper.add_site(GroundSite.BasicSectoidOperation())
+            self.mongo_helper.add_ufo(UFOs.Probe())
+            self.mongo_helper.add_ufo(UFOs.SmallScout())
+            self.mongo_helper.add_ufo(UFOs.MediumScout())
+            self.mongo_helper.add_ufo(UFOs.LargeScout())
+            self.mongo_helper.add_site(GroundSite.BasicSectoidOperation())
 
         # Load Collections from Mongo
-        self._ufos = self._mongo_helper.get_all_ufos()
-        self._sites = self._mongo_helper.get_all_sites()
+        self._ufos = self.mongo_helper.get_all_ufos()
+        self._sites = self.mongo_helper.get_all_sites()
 
         print("Shared Data initialized OK....")
 
@@ -60,7 +64,8 @@ class SharedData(metaclass=Singleton):
         self._loop.start_loop()
 
     def add_base(self, b):
-        self._all_bases[b.get_id()] = b
+        self._all_bases[b.id] = b
+        self._map.DefaultSector.add_object(b.map_object)
 
     def get_default_sector(self):
         return self._map.DefaultSector
@@ -119,7 +124,10 @@ class SharedData(metaclass=Singleton):
             self._all_ufos[site.map_object.id] = site
 
     def save_organization(self, o):
-        self._mongo_helper.save_organization(o)
+        self.mongo_helper.save_organization(o)
 
     def save_npc_character(self, npc):
-        self._mongo_helper.save_npc_character(npc)
+        self.mongo_helper.save_npc_character(npc)
+
+    def save_haven(self, haven):
+        self.mongo_helper.save_haven(haven)

@@ -28,11 +28,7 @@ class NPCCharacter(BaseObject):
 class Player(BaseObject):
     def __init__(self, name, last_name, organization, token, sector: map.MapSector):
         self.Name = '%s %s' % (name, last_name)
-        self.MapObject = GroundBaseMO(
-            map.Point(),
-            token,
-            self.Name
-        )
+        self.MapObject = None
         self.Organization = organization
         self.Token = token
         self.CurrentSector = sector
@@ -103,3 +99,15 @@ class Player(BaseObject):
                 skill.Status = config.SkillStatuses.SKILL_QUEUED
             pass
         pass
+
+
+def load_npc_character():
+    print("Loading NPCs...")
+    for o in SharedData().mongo_helper.NPCs.find():
+        npc = NPCCharacter()
+        npc.load_from_JSON(o)
+        SharedData().NPCs[npc.id] = npc
+    print("\bOK")
+
+
+load_npc_character()

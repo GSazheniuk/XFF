@@ -15,6 +15,7 @@ mapProto.prototype = {
         this.tilt = 0;
         this.height = 720;
         this.width = 720;
+        this.circumference = 6371 * Math.PI * 2;
 
         this.svg = {};
 
@@ -269,5 +270,5 @@ mapProto.prototype = {
     },
 
     draw_ufo: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(0.5)());},
-    draw_ufo_atk_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.R)());},
+    draw_ufo_atk_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.scan_rng / map.circumference * 360)());},
 }

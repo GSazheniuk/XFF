@@ -41,7 +41,9 @@
 
         .graticule {
             fill: transparent;
+            stroke-opacity:.5;
             stroke: #ccc;
+            stroke-dasharray: 2;
             stroke-width: 0.25px;
         }
 
@@ -79,17 +81,21 @@
         .bunker-filter{
           fill: transparent;
           stroke: cyan;
-          stroke-width: 1px;
+          stroke-width: 1.5px;
           filter: url(#glow-bunker);
         }
-        .bunker-scan-zone{
-          opacity:.1;
-          fill: cyan;
-        }
         .bunker-scan-range{
-          opacity:.5;
-          fill: transparent;
+          fill-opacity:.1;
+          fill: cyan;
+          stroke-opacity:.5;
           stroke: cyan;
+          stroke-dasharray: 2;
+        }
+        .bunker-atk-range{
+          fill-opacity:.1;
+          fill: yellow;
+          stroke-opacity:.5;
+          stroke: yellow;
           stroke-dasharray: 2;
         }
         div.tooltip {

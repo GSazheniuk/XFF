@@ -154,7 +154,7 @@ mapProto.prototype = {
         d3.timer(function (t){
 //            moon.attr("d", path(circle.center([-t / 60, 0])()));
 //            if (t % 10000 < 1000){
-                map.projection.rotate([-t / 600, 0, 0]);
+//                map.projection.rotate([-t / 600, 0, 0]);
                 map.redraw();
 //            }
         });
@@ -174,7 +174,7 @@ mapProto.prototype = {
         map.svg.selectAll(".ufo-atk-range").attr("d", map.draw_ufo_atk_zone);
         map.svg.selectAll(".bunker-filter")
             .attr("transform", function(d) { return "translate(" + map.projection([d.point.Lat, d.point.Long]) + ")"; })
-            .attr("d", function(d) {return d3.symbol().size(20).type(d3.symbolTriangle)();})
+            .attr("d", function(d) {return d3.symbol().size(20).type(d3.symbolSquare)();})
             .attr("opacity", function(d) {
                 var geoangle = d3.geoDistance(
                             [d.point.Lat, d.point.Long],
@@ -187,8 +187,8 @@ mapProto.prototype = {
                     return "1.0";
                 }
             });
-        map.svg.selectAll(".bunker-scan-zone").attr("d", map.draw_ufo_atk_zone);
-        map.svg.selectAll(".bunker-scan-range").attr("d", map.draw_ufo_atk_zone);
+        map.svg.selectAll(".bunker-atk-range").attr("d", map.draw_ufo_atk_zone);
+        map.svg.selectAll(".bunker-scan-range").attr("d", map.draw_ufo_scan_zone);
     },
     drawGraticule: function() {
         const graticule = d3.geoGraticule()
@@ -255,7 +255,7 @@ mapProto.prototype = {
           .append("path")
             .attr("class", "bunker-filter")
             .attr("transform", function(d) { return "translate(" + map.projection([d.point.Lat, d.point.Long]) + ")"; })
-            .attr("d", function(d) {return map.path(d3.symbol().size(20).type(d3.symbolTriangle)());})
+            .attr("d", function(d) {return map.path(d3.symbol().size(20).type(d3.symbolSquare)());})
             .attr("opacity", function(d) {
                 var geoangle = d3.geoDistance(
                             [d.point.Lat, d.point.Long],
@@ -268,12 +268,12 @@ mapProto.prototype = {
                     return "1.0";
                 }
             });
-        var tri = this.svg.selectAll(".bunker-scan-zone")
+        var tri = this.svg.selectAll(".bunker-atk-range")
             .data(bunkers, function(d) { return d.id; });
         tri.exit().remove();
         tri.enter()
           .append("path")
-            .attr("class", "bunker-scan-zone")
+            .attr("class", "bunker-atk-range")
             .attr("d", map.draw_ufo_atk_zone);
 
         var tri = this.svg.selectAll(".bunker-scan-range")
@@ -282,9 +282,10 @@ mapProto.prototype = {
         tri.enter()
           .append("path")
             .attr("class", "bunker-scan-range")
-            .attr("d", map.draw_ufo_atk_zone);
+            .attr("d", map.draw_ufo_scan_zone);
     },
 
     draw_ufo: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(0.5)());},
-    draw_ufo_atk_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.scan_rng / map.circumference * 360)());},
+    draw_ufo_atk_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.atk_rng / map.circumference * 360)());},
+    draw_ufo_scan_zone: function(d) {return map.path(d3.geoCircle().center([d.point.Lat, d.point.Long]).radius(d.scan_rng / map.circumference * 360)());},
 }

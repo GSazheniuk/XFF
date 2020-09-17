@@ -18,6 +18,7 @@ mapProto.prototype = {
         this.circumference = 6371 * Math.PI * 2;
 
         this.svg = {};
+        //this.tooltip = d3.select("div.tooltip");
 
         this.projection = d3.geoOrthographic().fitExtent([[50, 50], [this.width - 50, this.height - 50]], this.sphere);
         this.path = d3.geoPath(this.projection);
@@ -89,8 +90,23 @@ mapProto.prototype = {
           .append('path')
             .attr('class', 'country')
             .attr('d', this.path)
-            .style('stroke', "#fff");
-
+            .style('stroke', "#fff")
+			.on("mouseover",function(d,i){
+                d3.select(this).attr("fill","grey").attr("stroke-width",2);
+                console.log(d);
+                return tooltip.style("hidden", false).html(d.properties.name);
+            })
+            .on("mousemove",function(d){
+                tooltip
+                       .style("top", (d3.event.pageY) + "px")
+                       .style("left", (d3.event.pageX + 10) + "px")
+                       .html(d.properties.name);
+                $("div.tooltip").show();
+            })
+            .on("mouseout",function(d,i){
+                //d3.select(this).attr("fill","white").attr("stroke-width",1);
+                $("div.tooltip").hide();
+            });
         moon = this.svg.selectAll('moon')
                 .data([this.circle])
                 .enter()

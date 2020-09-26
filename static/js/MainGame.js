@@ -32,7 +32,7 @@ mGame.prototype = {
                         s += '- ' + enums.UfoStatuses[r[obj_id].status];
                         s += ' <span class="approach">&gt;&gt;</span>'
                         s += '</li>';
-                        $("#event_log").append(s);
+//                        $("#event_log").append(s);
 					}
 				    if (r[obj_id].objType == 0) {
 				        continue;
@@ -44,7 +44,7 @@ mGame.prototype = {
                         s += ' miles away. ';
                         s += ' <span class="approach">&gt;&gt;</span>'
                         s += '</li>';
-                        $("#event_log").append(s);
+//                        $("#event_log").append(s);
 					}
 				}
 				$("#opsnum").text(total_ops);

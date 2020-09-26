@@ -13,8 +13,8 @@ mapProto.prototype = {
         var world, land, borders, countries;
         this.sphere = ({type: "Sphere"});
         this.tilt = 0;
-        this.height = 720;
-        this.width = 720;
+        this.height = $("body").height();
+        this.width = $("body").width();
         this.circumference = 6371 * Math.PI * 2;
 
         this.svg = {};
@@ -30,8 +30,7 @@ mapProto.prototype = {
             //.translate([0,0])               // not linked directly to projection
             .on("zoom", this.redraw);
 
-        this.svg = d3.select("#map_holder").append("svg").attr("width", this.width).attr("height", this.height)
-            .attr("viewBox", "0 0 700 700");
+        this.svg = d3.select("#map_holder").append("svg").attr("width", this.width).attr("height", this.height);
         var defs = this.svg.append("defs");
         var filter = defs.append("filter")
             .attr("id","glow");

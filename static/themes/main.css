@@ -1,6 +1,10 @@
 html { height:100%; }
-body { position:absolute; top:0; bottom:0; right:0; left:0; font-family: 'Orbitron', sans-serif; margin-right:200px}
-.navbar.fixed-right{position:fixed;top:0;right:0;right:0;z-index:1030}@media (min-width:768px){.navbar.fixed-right{bottom:0;width:200px;flex-flow:column nowrap;align-items:flex-start}.navbar.fixed-right .navbar-collapse{flex-grow:0;flex-direction:column;width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav{flex-direction:column;width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav .nav-item{width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav .nav-item .dropdown-menu{top:0}}@media (min-width:768px){.navbar.fixed-right.navbar.fixed-right .navbar-nav .nav-item .dropdown-toggle:after{border-top:.3em solid transparent;border-right:.3em solid;border-bottom:.3em solid transparent;border-right:none;vertical-align:baseline}.navbar.fixed-right .navbar-nav .nav-item .dropdown-menu{right:100%}}
+body { position:absolute; top:0; bottom:0; right:0; left:0; font-family: 'Orbitron', sans-serif; margin-right:300px}
+h1, h2, h3, h4, h5 {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.navbar.fixed-right{position:fixed;top:0;right:0;right:0;z-index:1030}@media (min-width:768px){.navbar.fixed-right{bottom:0;width:300px;flex-flow:column nowrap;align-items:flex-start}.navbar.fixed-right .navbar-collapse{flex-grow:0;flex-direction:column;width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav{flex-direction:column;width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav .nav-item{width:100%}.navbar.fixed-right .navbar-collapse .navbar-nav .nav-item .dropdown-menu{top:0}}@media (min-width:768px){.navbar.fixed-right.navbar.fixed-right .navbar-nav .nav-item .dropdown-toggle:after{border-top:.3em solid transparent;border-right:.3em solid;border-bottom:.3em solid transparent;border-right:none;vertical-align:baseline}.navbar.fixed-right .navbar-nav .nav-item .dropdown-menu{right:100%}}
 .pull-bottom{ position: absolute; bottom: 0; right: 0; }
 .chat_container{
 	position: absolute; 
@@ -15,7 +19,7 @@ body { position:absolute; top:0; bottom:0; right:0; left:0; font-family: 'Orbitr
 	position: absolute;
 	bottom: 0;
 	right: 0;
-	width: 200px;
+	width: 300px;
 	text-align:center;
 }
 .worldtime .date{

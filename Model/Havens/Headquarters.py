@@ -8,8 +8,8 @@ class Headquarters(BaseHaven):
             type="Headquarters",
             owner_id=owner.id,
             point=point,
-            scan_rng=100,
-            atk_rng=50,
+            scan_rng=1500,
+            atk_rng=500,
             controlling_org_id=org.id,
             max_building_tier=5
         )

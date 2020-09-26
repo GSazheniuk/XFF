@@ -41,7 +41,7 @@ class PlayerLoginPlayer(BaseRequestHandler):
         )
         SharedData().add_online_player(self.session_id, player)
         AWaiters().deliver(AWaiters.WAIT_FOR_CHAT_PLAYERS, player)
-
+    
         player.CurrentSector.add_object(player.MapObject)
 
         self.redirect("/")

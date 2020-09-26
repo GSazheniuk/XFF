@@ -116,19 +116,19 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <div style="height:25%">&nbsp;</div>
             <div>
-                <a href="/player_view">Profile</a>
+                <h3><a href="/player_view">Profile</a></h3>
             </div>
             <hr />
             <div>
-                <a href="/base_view">Base</a>
+                <h3><a href="/base_view">Base</a></h3>
             </div>
             <hr />
             <div>
-                <a href="/base_view">Operations(<span id="opsnum">0</span>)</a>
+                <h3><a href="/base_view">Operations(<span id="opsnum">0</span>)</a></h3>
             </div>
             <hr />
             <div>
-                <a href="/squad_view">Finances</a>
+                <h3><a href="/squad_view">Finances</a></h3>
             </div>
         </div>
         <div class="worldtime">
@@ -212,11 +212,6 @@
 
 <script type="text/javascript">
     function displayPlayerInfo(pl){
-		$("#player_info").empty();
-		$("#player_info").append(pl.data.Name+"<br />");
-		$("#player_info").append("(" + pl.data.Organization.Name+")<br />");
-		$("#player_info").append("X: " + pl.data.MapObject.point.Lat);
-		$("#player_info").append("  |   Y: " + pl.data.MapObject.point.Long+"<br />");
 	}
 
     var p = new Player();

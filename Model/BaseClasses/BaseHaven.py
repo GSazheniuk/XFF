@@ -9,7 +9,8 @@ class BaseHaven(BaseObject):
         self.id = uuid.uuid4().hex
         self.name = ""
         self.allowed_buildings = []
-        self.max_building_tier = 0
+        self.building_spots = []
+        self.buildings = {}
         self.map_object = None
 
     def new(self, *args, **kwargs):

@@ -1,4 +1,7 @@
 import uuid
+import random
+
+from Assets.crew import Soldier
 from Model.BaseClasses.BaseObjects import BaseObject, BaseMapObject
 from Geoscape.MapObjects import GroundBaseMO
 from SharedData import SharedData
@@ -12,6 +15,8 @@ class BaseHaven(BaseObject):
         self.building_spots = []
         self.buildings = {}
         self.map_object = None
+        self.avail_recruits = []
+        self.refresh_event = None
 
     def new(self, *args, **kwargs):
         point, scan_rng, atk_rng = None, 0, 0
@@ -30,6 +35,17 @@ class BaseHaven(BaseObject):
 
     def save(self):
         SharedData().save_haven(haven=self)
+
+    def refresh_recruits(self):
+        self.avail_recruits = []
+        for i in range(5):
+            s = Soldier("Rookie {}".format(random.randint(0, 100)))
+            self.avail_recruits.append(s)
+        pass
+
+    def clear_recruits(self):
+        self.avail_recruits = []
+        pass
 
 
 def load_havens():

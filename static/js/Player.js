@@ -85,7 +85,7 @@ Player.prototype = {
             type: "POST",
             contentType: "application/json; charset=utf-8",
             url: "/bunker/recruitSoldier",
-            data: JSON.stringify({"recruit_id": parseInt(recruit_id), "bunker_id": parseInt(bunker_id)}),
+            data: JSON.stringify({"recruit_id": parseInt(recruit_id), "bunker_id": bunker_id}),
             dataType: "json",
             success: function (r) {
                 recruitSoldier(recruit_id);

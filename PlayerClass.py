@@ -45,6 +45,7 @@ class Player(BaseObject):
         self.SkillsQueue = []
         self.Crew = []
         self.Wallet = 10000
+        self.Bases = []
 
         # self.Aircraft = {
         #     "_id": 0,

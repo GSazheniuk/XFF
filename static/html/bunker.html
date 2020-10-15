@@ -88,7 +88,7 @@
     }
 
     function recruitSoldier(){
-        b.getData(p.data.Organization.Bases[0].MapObject.id);
+        b.getData(p.data.Organization.hq_id);
     }
 
     function displayBunkerInfo(info){
@@ -111,7 +111,7 @@
                                 + "SPD: " + r[i].speed.toFixed(2)+"<hr/></div>"
                                 + "<div class='text-right'>"
                                 + "<a href='#' data='"
-                                + r[i].id + ":" +  p.data.Organization.Bases[0].MapObject.id
+                                + r[i]._id + ":" +  p.data.Organization.hq_id
                                 + "' class='recruit_link'>recruit</a>"
                                 + "</div></div>");
         }
@@ -126,7 +126,7 @@
     chat.LoadChat(chat);
 
     var b = new Bunker();
-    p.refreshPlayerCallback = function(){ b.getData(p.data.Organization.Bases[0].MapObject.id); };
+    p.refreshPlayerCallback = function(){ b.getData(p.data.Organization.hq_id); };
 </script>
 </body>
 </html>

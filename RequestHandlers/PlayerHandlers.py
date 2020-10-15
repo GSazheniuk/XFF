@@ -35,7 +35,9 @@ class PlayerLoginPlayer(BaseRequestHandler):
         player = Player(
             "Vincent"
             , "Merle"
-            , npc_org.get_random_org()
+            , SharedData().organizations[
+                next((org for org in SharedData().organizations if SharedData().organizations[org].name == "X-COM"))
+            ]
             , random.randint(1000000, 10000000)
             , SharedData().get_default_sector()
         )

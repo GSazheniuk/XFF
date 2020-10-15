@@ -1,3 +1,5 @@
+from Model.BaseClasses.BaseAction import BaseAction
+
 class BaseObject:
     def load_from_JSON(self, data=None):
         for p in data:
@@ -19,6 +21,8 @@ class BaseObject:
                     res[p][a] = x[a].dict() if issubclass(type(x[a]), BaseObject) else x[a]
             elif issubclass(type(x), BaseObject):
                 res[p] = x.dict()
+            elif issubclass(type(x), BaseAction):
+                pass
             else:
                 res[p if p != 'id' else '_id'] = x
         return res

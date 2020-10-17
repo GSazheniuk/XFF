@@ -28,6 +28,7 @@ class Soldier(BaseObject):
         self.id = random.randint(0, config.PLAYER_MAX_ID)
         self.right_arm = Rifle(self.time_units)
         self.name = name
+        super().__init__()
         pass
 
 
@@ -53,4 +54,5 @@ class Sectoid(BaseObject):
         self.id = random.randint(0, config.PLAYER_MAX_ID)
         self.right_arm = Rifle(self.time_units)
         self.name = name
+        super().__init__()
         pass

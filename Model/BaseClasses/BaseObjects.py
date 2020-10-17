@@ -17,6 +17,9 @@ def load_from_JSON(data=None, sub_classes=None):
 
 
 class BaseObject:
+    def __init__(self):
+        self.type = type(self).__name__
+
     def load_from_JSON(self, data=None, sub_classes=None):
         if not sub_classes:
             sub_classes = []
@@ -57,6 +60,7 @@ class BaseMapObject(BaseObject):
         self.name = name
         self.scan_rng = scan_rng
         self.atk_rng = atk_rng
+        super().__init__()
         pass
 
     def __del__(self):

@@ -12,7 +12,7 @@ import random
 
 class SharedData(metaclass=Singleton):
     def __init__(self):
-        print("Shared Data initializing....")
+        print("Shared Data initializing....", end="")
         self._online = {}
         self._players = {}
         self._all_ufos = {}
@@ -42,7 +42,7 @@ class SharedData(metaclass=Singleton):
         self._ufos = self.mongo_helper.get_all_ufos()
         self._sites = self.mongo_helper.get_all_sites()
 
-        print("Shared Data initialized OK....")
+        print("OK")
 
     def is_online(self, session_id):
         return session_id in self._online

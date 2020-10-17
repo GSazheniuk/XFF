@@ -15,6 +15,7 @@ class NPCCharacter(BaseObject):
         self.name = ""
         self.bio = ""
         self.portrait = ""
+        super().__init__()
 
     def new(self, name, bio, portrait):
         self.name = name
@@ -64,6 +65,7 @@ class Player(BaseObject):
         #     "max_damage": 15,
         #     "accuracy": 100,
         # }
+        super().__init__()
         pass
 
     def skill_done(self, skill):

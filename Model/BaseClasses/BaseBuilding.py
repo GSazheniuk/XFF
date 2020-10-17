@@ -15,6 +15,7 @@ class BaseBuilding(BaseObject):
         self.condition = 0
         self.maintenance_req = 0
         self.coos = []
+        super().__init__()
 
     def new(self, *args, **kwargs):
         for k in kwargs:

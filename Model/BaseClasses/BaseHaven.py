@@ -2,7 +2,7 @@ import uuid
 import random
 
 from Assets.crew import Soldier
-from Model.BaseClasses.BaseObjects import BaseObject, BaseMapObject
+from Model.BaseClasses.BaseObjects import *
 from Geoscape.MapObjects import GroundBaseMO
 from SharedData import SharedData
 
@@ -17,7 +17,7 @@ class BaseHaven(BaseObject):
         self.map_object = None
         self.avail_recruits = []
         self.refresh_event = None
-        self.type = type(self).__name__
+        super().__init__()
 
     def new(self, *args, **kwargs):
         point, scan_rng, atk_rng = None, 0, 0
@@ -54,16 +54,3 @@ class BaseHaven(BaseObject):
         sub_classes.append(BaseHaven)
         sub_classes.append(GroundBaseMO)
         super().load_from_JSON(data, sub_classes)
-
-
-def load_havens():
-    print("Loading Havens...")
-    for o in SharedData().mongo_helper.Havens.find():
-        haven = BaseHaven()
-        haven.load_from_JSON(o)
-        SharedData().havens[haven.id] = haven
-        SharedData().add_base(haven)
-    print("\bOK")
-
-
-load_havens()

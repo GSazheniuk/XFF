@@ -16,6 +16,7 @@ class MapSector(BaseObject):
         self.Width = config.MAP_DEFAULT_SECTOR_WIDTH
         self.Height = config.MAP_DEFAULT_SECTOR_HEIGHT
         self.objects = {}
+        super().__init__()
         pass
 
     def add_object(self, o):
@@ -63,6 +64,8 @@ class Point(BaseObject):
 
         if long:
             self.Long = long
+
+        super().__init__()
         pass
 
 

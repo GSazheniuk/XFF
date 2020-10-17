@@ -21,15 +21,3 @@ class Organization(BaseObject):
 
     def save(self):
         SharedData().save_organization(o=self)
-
-
-def load_organizations():
-    print("Loading Organizations...")
-    for o in SharedData().mongo_helper.organizations.find():
-        org = Organization()
-        org.load_from_JSON(o)
-        SharedData().organizations[org.id] = org
-    print("\bOK")
-
-
-load_organizations()

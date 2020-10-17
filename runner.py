@@ -2,8 +2,10 @@ from FrontServer import FrontWatchServer
 from BackServer import BackBoneServer
 
 from SharedData import SharedData
-import OrganizationClass, PlayerClass, Model.BaseClasses.BaseHaven
+import OrganizationClass, PlayerClass
+from Tools import MainLoader
 
+MainLoader.load_all()
 
 try:
     from asyncio import WindowsSelectorEventLoopPolicy, set_event_loop_policy

@@ -17,6 +17,7 @@ class BaseHaven(BaseObject):
         self.map_object = None
         self.avail_recruits = []
         self.refresh_event = None
+        self.type = type(self).__name__
 
     def new(self, *args, **kwargs):
         point, scan_rng, atk_rng = None, 0, 0
@@ -46,6 +47,13 @@ class BaseHaven(BaseObject):
     def clear_recruits(self):
         self.avail_recruits = []
         pass
+
+    def load_from_JSON(self, data=None, sub_classes=None):
+        if not sub_classes:
+            sub_classes = []
+        sub_classes.append(BaseHaven)
+        sub_classes.append(GroundBaseMO)
+        super().load_from_JSON(data, sub_classes)
 
 
 def load_havens():

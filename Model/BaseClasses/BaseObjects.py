@@ -1,7 +1,26 @@
 from Model.BaseClasses.BaseAction import BaseAction
 
+
+def load_from_JSON(data=None, sub_classes=None):
+    r = None
+
+    if not sub_classes:
+        sub_classes = []
+
+    if "type" in data:
+        b = next((sc for sc in sub_classes if sc.__name__ == data["type"]))
+        if b:
+            r = b()
+            r.load_from_JSON(data)
+
+    return r
+
+
 class BaseObject:
-    def load_from_JSON(self, data=None):
+    def load_from_JSON(self, data=None, sub_classes=None):
+        if not sub_classes:
+            sub_classes = []
+
         for p in data:
             if p == "_id":
                 self.__setattr__("id", data[p])

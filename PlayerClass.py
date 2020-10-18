@@ -102,15 +102,3 @@ class Player(BaseObject):
                 skill.Status = config.SkillStatuses.SKILL_QUEUED
             pass
         pass
-
-
-def load_npc_character():
-    print("Loading NPCs...")
-    for o in SharedData().mongo_helper.NPCs.find():
-        npc = NPCCharacter()
-        npc.load_from_JSON(o)
-        SharedData().NPCs[npc.id] = npc
-    print("\bOK")
-
-
-load_npc_character()

@@ -29,9 +29,3 @@ class Headquarters(BaseHaven):
         lq.new(self, [-1, 0, 1])
         self.buildings[lq.id] = lq
         self.building_spots[2].append(pg.id)
-
-    def load_from_JSON(self, data=None, sub_classes=None):
-        if not sub_classes:
-            sub_classes = []
-        sub_classes.append(Headquarters)
-        super().load_from_JSON(data, sub_classes)

@@ -23,7 +23,7 @@ class MapSector(BaseObject):
         if not o:
             return
         if type(o) is dict:
-            mo = BaseMapObject(None, 0, 0, 0, "", 0, 0)
+            mo = BaseMapObject()
             mo.load_from_JSON(o)
             o = mo
         self.objects[o.id] = o
@@ -52,21 +52,6 @@ class MapSector(BaseObject):
 
     def get_id(self):
         return self._id
-
-
-class Point(BaseObject):
-    def __init__(self, lat=None, long=None):
-        self.Lat = random.random() * 180 - 90
-        self.Long = random.random() * 360 - 180
-
-        if lat:
-            self.Lat = lat
-
-        if long:
-            self.Long = long
-
-        super().__init__()
-        pass
 
 
 class Map:

@@ -3,6 +3,7 @@ import random
 
 from Assets.crew import Soldier
 from Model.BaseClasses.BaseObjects import *
+from Model.Havens.Buildings.AllBuildings import all_buildings
 from Geoscape.MapObjects import GroundBaseMO
 from SharedData import SharedData
 
@@ -51,6 +52,6 @@ class BaseHaven(BaseObject):
     def load_from_JSON(self, data=None, sub_classes=None):
         if not sub_classes:
             sub_classes = []
-        sub_classes.append(BaseHaven)
         sub_classes.append(GroundBaseMO)
+        sub_classes.extend(all_buildings)
         super().load_from_JSON(data, sub_classes)

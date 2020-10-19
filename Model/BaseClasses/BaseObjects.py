@@ -1,4 +1,5 @@
 from Model.BaseClasses.BaseAction import BaseAction
+import random
 
 
 def load_from_JSON(data=None, sub_classes=None):
@@ -27,6 +28,14 @@ class BaseObject:
         for p in data:
             if p == "_id":
                 self.__setattr__("id", data[p])
+            elif type(data[p]) is dict and "type" in data[p]:
+                subs = [sc.__name__ for sc in sub_classes]
+                if subs and data[p]["type"] in subs:
+                    x = next((sc for sc in sub_classes if sc.__name__ == data[p]["type"]))()
+                    x.load_from_JSON(data[p], sub_classes)
+                    self.__setattr__(p, x)
+                else:
+                    self.__setattr__(p, data[p])
             else:
                 self.__setattr__(p, data[p])
 
@@ -51,7 +60,19 @@ class BaseObject:
 
 
 class BaseMapObject(BaseObject):
-    def __init__(self, point, r, obj_type, object_id, name, scan_rng, atk_rng):
+    def __init__(self):
+        self.point = None
+        self.R = 0
+        self.objType = None
+        self.id = None
+        self.status = 0
+        self.name = None
+        self.scan_rng = 0
+        self.atk_rng = 0
+        super().__init__()
+        pass
+
+    def new(self, point, r, obj_type, object_id, name, scan_rng, atk_rng):
         self.point = point
         self.R = r
         self.objType = obj_type
@@ -60,9 +81,30 @@ class BaseMapObject(BaseObject):
         self.name = name
         self.scan_rng = scan_rng
         self.atk_rng = atk_rng
-        super().__init__()
         pass
 
     def __del__(self):
         print('MapObject id: %s has been removed...' % self.id)
         pass
+
+    def load_from_JSON(self, data=None, sub_classes=None):
+        if not sub_classes:
+            sub_classes = []
+        sub_classes.append(Point)
+        super().load_from_JSON(data, sub_classes)
+
+
+class Point(BaseObject):
+    def __init__(self):
+        self.Lat = random.random() * 180 - 90
+        self.Long = random.random() * 360 - 180
+
+        super().__init__()
+        pass
+
+    def new(self, *args, **kwargs):
+        if "lat" in kwargs:
+            self.Lat = kwargs["lat"]
+
+        if "long" in kwargs:
+            self.Long = kwargs["long"]

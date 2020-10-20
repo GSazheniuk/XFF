@@ -1,9 +1,10 @@
 from pygeodesy import ellipsoidalVincenty
-from map import Point
+from Model.BaseClasses.BaseObjects import Point
 import requests
 
 
 GEOLOCATION_URL = "http://api.geonames.org/extendedFindNearbyJSON?lat=%s&lng=%s&username=MrRandomizer"
+
 
 def minimum(a, b):
     if a < b:
@@ -25,7 +26,9 @@ def next_point(pointA, pointB, speed):
     start_point = ellipsoidalVincenty.LatLon(pointA.Lat, pointA.Long)
     end_point = ellipsoidalVincenty.LatLon(pointB.Lat, pointB.Long)
     new_point = start_point.destination(speed, start_point.initialBearingTo(end_point))
-    return Point(new_point.lat, new_point.lon)
+    point = Point()
+    point.new(lat=new_point.lat, long= new_point.lon)
+    return point
 
 
 def get_location_name(point: Point):

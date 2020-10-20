@@ -6,6 +6,7 @@ import math
 
 from Geoscape import MapObjects
 from Model.Actions.CombatSiteEvents import DeSpawnSiteEvent
+from Model.BaseClasses.BaseObjects import Point
 from PlayerClass import Player
 from Assets.crew import Sectoid
 from Waiters import AWaiters
@@ -16,8 +17,11 @@ class CombatSite:
     def __init__(self, o, ms: map.MapSector):
         self.id = random.randint(0, config.EVENTS_MAX_ID)
         self.data = o
-        self.map_object = MapObjects.CombatSiteMO(
-            map.Point(),
+        self.map_object = MapObjects.CombatSiteMO()
+        p = Point()
+        p.new()
+        self.map_object.new(
+            p,
             self.id,
             o['name']
         )

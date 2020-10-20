@@ -15,6 +15,6 @@ class AircraftMO(BaseMapObject):
 
 
 class CombatSiteMO(BaseMapObject):
-    def __init__(self, point, object_id, name):
-        super(CombatSiteMO, self).__init__(point, 1, MapObjectTypes.COMBAT_SITE, object_id, name, 0, 0)
+    def new(self, point, object_id, name, r=None, obj_type=None, scan_rng=None, atk_rng=None):
+        super(CombatSiteMO, self).new(point, 1, MapObjectTypes.COMBAT_SITE, object_id, name, 0, 0)
         pass

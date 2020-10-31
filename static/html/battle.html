@@ -11,6 +11,7 @@
     <script src="https://code.jquery.com/jquery-2.2.3.min.js" type="text/javascript"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="js/tools.js" type="text/javascript"></script>
 
 <style>
     .border_div {
@@ -62,32 +63,27 @@ class LogMessage extends React.Component {
 
 var lastLoaded = 0;
 
-function listen2Queue() {
-    $("#log").empty();
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/battle", true);
-    xhr.onprogress = function (a) {
-        s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
-        s = s.replace(/'/g, '"').replace(/\[\]/g, '').replace(/\]\[/g, ']:[').split(':');
-        console.log(s);
-        s.forEach(function(c){
-            if (c[0] == "["){
-                a = JSON.parse(c);
-                a.forEach(function(d){
-                    b = d.split("|");
-                    $("#"+b[2]+" .health .hp").text(b[4]);
-                    $("#log").append(d+"<br />");
-                });
-            }
-            else $("#log").append(c+"<br />");
-        });
-        lastLoaded = a.loaded;
-    }
-    xhr.send();
+function battle(a) {
+    s = a.target.responseText.substr(lastLoaded, a.loaded - lastLoaded);
+    s = s.replace(/'/g, '"').replace(/\[\]/g, '').replace(/\]\[/g, ']:[').split(':');
+    console.log(s);
+    s.forEach(function(c){
+        if (c[0] == "["){
+            a = JSON.parse(c);
+            a.forEach(function(d){
+                b = d.split("|");
+                $("#"+b[2]+" .health .hp").text(b[4]);
+                $("#log").append(d+"<br />");
+            });
+        }
+        else $("#log").append(c+"<br />");
+    });
+    lastLoaded = a.loaded;
 }
 
 $(document).ready(function(){
-    listen2Queue();
+    $("#log").empty();
+    listen2queue("/battle", battle);
 });
 
 </script>

@@ -240,49 +240,20 @@
         lastTime = "",
         tooltip = {};
 
-    function listen2Queue() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/map/time", true);
-        xhr.onprogress = function (a) {
-            $(".worldtime .date").empty();
-            $(".worldtime .time").empty();
-            s = xhr.responseText.substr(lastLoaded, a.loaded - lastLoaded);
-            lastTime = new Date(s+" GMT");
-            s = lastTime.toUTCString().split(' ');
-            $(".worldtime .date").append(s[1]+' '+s[2]+', '+s[3]);
-            $(".worldtime .time").append(s[4]);
-            lastLoaded = a.loaded;
-        }
-        xhr.send();
-    }
-
-    function updateTime(){
-        lastTime.setSeconds(lastTime.getSeconds()+5);
+    function worldtime(a) {
         $(".worldtime .date").empty();
         $(".worldtime .time").empty();
+        s = a.target.responseText.substr(lastLoaded, a.loaded - lastLoaded);
+        lastTime = new Date(s+" GMT");
         s = lastTime.toUTCString().split(' ');
         $(".worldtime .date").append(s[1]+' '+s[2]+', '+s[3]);
         $(".worldtime .time").append(s[4]);
+        lastLoaded = a.loaded;
     }
 
     $(document).ready(function(){
-        listen2Queue();
+        listen2queue("/map/time", worldtime);
         tooltip = d3.select("div.tooltip");
-        return;
-		$.ajax({
-			type: "GET",
-            contentType: "application/json; charset=utf-8",
-			url: "/map/time",
-			success: function (r) {
-			    console.log(r);
-			    lastTime = new Date(r+" GMT");
-			    window.setInterval(updateTime, 1000);
-			},
-			error: function (message) {
-				console.error("error has occured");
-				console.error(message);
-			}
-		})
     });
 
 </script>

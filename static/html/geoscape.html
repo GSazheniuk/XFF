@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>XFF - Geoscape</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link rel="stylesheet" href="themes/slate.min.css" />
@@ -123,31 +123,31 @@
     </style>
 </head>
 <body style="background-color: black">
-<div class="tooltip"></div>
+    <div class="tooltip"></div>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-right">
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <div style="height:25%">&nbsp;</div>
-            <div>
-                <h3><a href="/player_view">Profile</a></h3>
-            </div>
-            <hr />
-            <div>
-                <h3><a href="/base_view">Base</a></h3>
-            </div>
-            <hr />
-            <div>
-                <h3><a href="/base_view">Operations(<span id="opsnum">0</span>)</a></h3>
-            </div>
-            <hr />
-            <div>
-                <h3><a href="/squad_view">Finances</a></h3>
-            </div>
+            <div style="height:15%">&nbsp;</div>
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/player_view">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/base_view">Base</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="modal" data-target="#ops_modal">Operations(<span id="opsnum">0</span>)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/squad_view">Finances</a>
+            </li>
+            </ul>
         </div>
         <div class="worldtime">
             <div class="date"></div>
             <div class="time"></div>
         </div>
     </nav>
+
     <div class='container-fluid'>
         <div class="row">
             <div class="col-sm-12 text-center">
@@ -164,6 +164,25 @@
         </div>
         <script src="https://use.fontawesome.com/45e03a14ce.js" type="text/javascript"></script>
     </div>
+
+    <div class="modal fade" id="ops_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal_label">Current Operations</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="modal_body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <script type="text/javascript">
     class Versor {
       static fromAngles([l, p, g]) {
@@ -254,8 +273,45 @@
     $(document).ready(function(){
         listen2queue("/map/time", worldtime);
         tooltip = d3.select("div.tooltip");
+        $('#ops_modal').on(
+            'show.bs.modal',
+            function (event) {
+                $("#modal_body").empty();
+                d = '<div class="container-fluid">';
+                for (var ix in map.sites){
+                    o = map.sites[ix];
+                    d += '<div class="row">';
+                    d += '<div class="col-sm-1 text-center">'+o.objType+'</div>';
+                    d += '<div class="col-sm-6 text-center">'+o.name+'</div>';
+                    d += '<div class="col-sm-2 text-center">'+o._id+'</div>';
+                    d += '<div class="col-sm-3 text-center site" id="'+o._id+'"><a href="#" class="approach">Attack</a></div>';
+                    d += '</div>';
+                    $("#modal_body").append();
+                }
+                d += '</div>';
+                $("#modal_body").append(d);
+                $(".site .approach").click(function(e){
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/attack_site",
+                        data: JSON.stringify({"site_id": $(this.parentElement).attr("id")}),
+                        dataType: "json",
+            			success: function (r) {
+            			    console.log("attack result: ", r)
+            			    location.href = "/attack_site"
+                        },
+                        error: function (message) {
+                            console.error("approachObject error has occurred");
+                            console.error(message);
+                        }
+                    })
+                });
+        });
     });
 
 </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

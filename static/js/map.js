@@ -13,9 +13,10 @@ mapProto.prototype = {
         var world, land, borders, countries;
         this.sphere = ({type: "Sphere"});
         this.tilt = 0;
-        this.height = $("body").height();
+        this.height = $("body").height()*0.99;
         this.width = $("body").width();
         this.circumference = 6371 * Math.PI * 2;
+        this.sites = [];
 
         this.svg = {};
         //this.tooltip = d3.select("div.tooltip");
@@ -217,14 +218,14 @@ mapProto.prototype = {
     draw_objects: function(objects){
         ufos = [];
         bunkers = [];
-        sites = [];
+        map.sites = [];
         for (var o in objects){
             if (objects[o].objType == 1){
                 ufos.push(objects[o]);
             }
             if (objects[o].objType == 2){
                 objects[o].R = 7;
-                sites.push(objects[o]);
+                map.sites.push(objects[o]);
             }
             if (objects[o].objType == 0){
                 objects[o].R = 7;
@@ -236,7 +237,7 @@ mapProto.prototype = {
             return;
 
         this.draw_ufos(ufos);
-        this.draw_sites(sites);
+        this.draw_sites(map.sites);
         this.draw_bunkers(bunkers);
     },
 
